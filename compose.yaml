@@ -1,0 +1,16 @@
+services:
+
+  postgres:
+    image: postgres:13.4
+    restart: always
+    container_name: local_fun_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: fundb
+      POSTGRES_USER: funuser
+      POSTGRES_PASSWORD: funsecret
+      PGDATA: "/var/lib/postgresql/data"
+    volumes:
+      - ./db_setup:/docker-entrypoint-initdb.d
+      - ./pg_data:/var/lib/postgresql/data

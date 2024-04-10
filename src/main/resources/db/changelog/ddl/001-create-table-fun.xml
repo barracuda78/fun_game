@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+  <changeSet id="001-create-table-fun.xml" author="DDE-POMS-CORE">
+
+    <preConditions>
+      <not>
+        <tableExists schemaName="funschema" tableName="fun"/>
+      </not>
+    </preConditions>
+
+    <comment>Create funschema.fun</comment>
+
+    <createTable tablespace="pg_default" schemaName="funschema" tableName="fun">
+      <column name="id" type="INT" generationType="ALWAYS" autoIncrement="true">
+        <constraints primaryKey="true" unique="true"/>
+      </column>
+      <column name="name" type="varchar(10)" >
+        <constraints nullable="false" unique="true"/>
+      </column>
+      <column name="is_active" type="boolean" defaultValue="true">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <rollback>
+      <dropTable schemaName="funschema" tableName="fun"/>
+    </rollback>
+
+  </changeSet>
+
+</databaseChangeLog>

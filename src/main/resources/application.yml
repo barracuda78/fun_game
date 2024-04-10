@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: fun
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/fundb?currentSchema=funschema
+    username: funuser
+    password: funsecret
+#    initialization-mode: never
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  liquibase:
+    change-log: db/changelog/db.changelog-master.xml
+    contexts: live
+  cache:
+    caffeine:
+      spec: maximumSize=100,expireAfterWrite=10m
