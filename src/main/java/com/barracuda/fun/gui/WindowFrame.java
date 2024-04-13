@@ -25,14 +25,16 @@ public class WindowFrame extends JFrame {
 //        JButton button = new JButton("Press");
 //        getContentPane().add(button);
         this.setVisible(true);
+
+        gamePanel.setupGame();
         gamePanel.startGameThread();
     }
 
-    public static void main(String[] args) {
-        KeyHandler keyHandler = new KeyHandler();
-        GamePanel gamePanel = new GamePanel(keyHandler);
-        WindowFrame windowFrame = new WindowFrame(gamePanel);
-        windowFrame.init();
-    }
+//    public static void main(String[] args) {
+//        KeyHandler keyHandler = new KeyHandler();
+//        GamePanel gamePanel = new GamePanel(keyHandler);
+//        WindowFrame windowFrame = new WindowFrame(gamePanel);
+//        windowFrame.init();
+//    }
 
 }

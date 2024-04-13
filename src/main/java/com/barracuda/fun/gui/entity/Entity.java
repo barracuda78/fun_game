@@ -1,12 +1,13 @@
 package com.barracuda.fun.gui.entity;
 
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 public class Entity {
 
-    public int x;
+    public int worldX;
 
-    public int y;
+    public int worldY;
 
     public int speed;
 
@@ -24,5 +25,13 @@ public class Entity {
     public int spriteCounter = 0;
 
     public int spriteNumber = 1;
+
+    public Rectangle solidArea;
+
+    public int solidAreaDefaultX;
+
+    public int solidAreaDefaultY;
+
+    public boolean collisionOn = false;
 
 }
