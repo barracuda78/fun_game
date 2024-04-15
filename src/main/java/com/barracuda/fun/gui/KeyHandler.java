@@ -15,6 +15,8 @@ public class KeyHandler implements KeyListener {
 
     public boolean rightPressed;
 
+    public boolean paused = false;
+
     @Override
     public void keyTyped(KeyEvent e) {
         //we are not gonna use it
@@ -34,6 +36,14 @@ public class KeyHandler implements KeyListener {
         }
         if (code == KeyEvent.VK_D) {
             rightPressed = true;
+        }
+        if (code == KeyEvent.VK_P) {
+            if (paused) {
+                paused = false;
+            }
+            else if (!paused) {
+                paused = true;
+            }
         }
     }
 

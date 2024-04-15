@@ -16,6 +16,7 @@ public class Sound {
         soundURL[1] = getClass().getResource("/graphics/sound/sonar.wav");
         soundURL[2] = getClass().getResource("/graphics/sound/din-don.wav");
         soundURL[3] = getClass().getResource("/graphics/sound/don-din.wav");
+        soundURL[4] = getClass().getResource("/graphics/sound/fanfare.wav");
     }
     public void setFile(int i) {
         try {

@@ -1,14 +1,20 @@
 package com.barracuda.fun.gui.item;
 
+import com.barracuda.fun.gui.GamePanel;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class KeyItem extends Item {
 
-    public KeyItem() {
+    GamePanel gamePanel;
+
+    public KeyItem(GamePanel gamePanel) {
+
+        this.gamePanel = gamePanel;
         name = "key";
         try {
             image = ImageIO.read(getClass().getResourceAsStream("/graphics/objects/key_01.png"));
+            tool.scaleImage(image, gamePanel.tileSize, gamePanel.tileSize);
         }
         catch (IOException e) {
             e.printStackTrace();

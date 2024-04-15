@@ -1,10 +1,9 @@
 package com.barracuda.fun.gui.tile;
 
 import com.barracuda.fun.gui.GamePanel;
-import jakarta.annotation.PostConstruct;
+import com.barracuda.fun.gui.UtilityTool;
 import java.awt.Graphics2D;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import javax.imageio.ImageIO;
@@ -21,37 +20,53 @@ public class TileManager {
 
     public TileManager(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
-        tile = new Tile[10];
+        tile = new Tile[99];
         mapTile = new int[gamePanel.maxWorldColumn][gamePanel.maxWorldRow];
         getTileImage();
-        loadMap("/graphics/maps/world_01.txt");
+//        loadMap("/graphics/maps/world_01.txt");
+        loadMap("/graphics/maps/world_01_enhanced.txt");
     }
 
     public void getTileImage() {
+
+        setup(0, "tile_brick", true);
+        setup(1, "tile_grass_02", false);
+        setup(2, "tile_water", true);
+        setup(3, "earth", false);
+        setup(4, "tree_02", true);
+        setup(5, "sand", false);
+        setup(6, "palm_01", true);
+
+        // WATER:
+        setup(10, "tile_water_01", true);
+        setup(11, "tile_water_02", true);
+
+        //GRASS WATER:
+        setup(20, "tile_grass_water_up_01", false);
+        setup(21, "tile_grass_water_up_right_01", false);
+        setup(22, "tile_grass_water_right_01", false);
+        setup(23, "tile_grass_water_down_right_01", false);
+        setup(24, "tile_grass_water_down_01", false);
+        setup(25, "tile_grass_water_down_left_01", false);
+        setup(26, "tile_grass_water_left_01", false);
+        setup(27, "tile_grass_water_up_left_01", false);
+        setup(28, "tile_grass_water_up_left_outer_01", false);
+        setup(29, "tile_grass_water_up_right_outer_01", false);
+        setup(30, "tile_grass_water_down_right_outer_01", false);
+        setup(31, "tile_grass_water_down_left_outer_01", false);
+
+    }
+
+
+    public void setup(int index, String imageName, boolean collision) {
+        UtilityTool tool = new UtilityTool();
         try {
-            tile[0] = new Tile();
-            tile[0].image = ImageIO.read(getClass().getResourceAsStream("/graphics/tiles/tile_brick.png"));
-            tile[0].collision = true;
-
-            tile[1] = new Tile();
-            tile[1].image = ImageIO.read(getClass().getResourceAsStream("/graphics/tiles/tile_grass.png"));
-            tile[1].collision = false;
-
-            tile[2] = new Tile();
-            tile[2].image = ImageIO.read(getClass().getResourceAsStream("/graphics/tiles/tile_water.png"));
-            tile[2].collision = true;
-
-            tile[3] = new Tile();
-            tile[3].image = ImageIO.read(getClass().getResourceAsStream("/graphics/tiles/earth.png"));
-
-            tile[4] = new Tile();
-            tile[4].image = ImageIO.read(getClass().getResourceAsStream("/graphics/tiles/tree.png"));
-            tile[4].collision = true;
-
-            tile[5] = new Tile();
-            tile[5].image = ImageIO.read(getClass().getResourceAsStream("/graphics/tiles/sand.png"));
+            tile[index] = new Tile();
+            tile[index].image = ImageIO.read(getClass().getResourceAsStream("/graphics/tiles/" + imageName + ".png"));
+            tile[index].image = tool.scaleImage(tile[index].image, gamePanel.tileSize, gamePanel.tileSize);
+            tile[index].collision = collision;
         }
-        catch (IOException e) {
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -114,36 +129,6 @@ public class TileManager {
                 worldRow++;
             }
         }
-
-
-
-//        //brick:
-//        for (int x = 0; x < 16*48; x+=48) {
-//            graphics2D.drawImage(tile[2].image, x, 0, gamePanel.tileSize, gamePanel.tileSize, null);
-//        }
-//        for (int y = 48; y < 11*48; y+=48) {
-//            graphics2D.drawImage(tile[2].image, 0, y, gamePanel.tileSize, gamePanel.tileSize, null);
-//        }
-//        for (int y = 48; y < 11*48; y+=48) {
-//            graphics2D.drawImage(tile[2].image, 15*48, y, gamePanel.tileSize, gamePanel.tileSize, null);
-//        }
-//        for (int x = 0; x < 16*48; x+=48) {
-//            graphics2D.drawImage(tile[2].image, x, 11*48, gamePanel.tileSize, gamePanel.tileSize, null);
-//        }
-//
-//        //grass:
-//        for (int y = 48; y < 11*48; y+=48) {
-//            for (int x = 48; x < 15 * 48; x += 48) {
-//                graphics2D.drawImage(tile[0].image, x, y, gamePanel.tileSize, gamePanel.tileSize, null);
-//            }
-//        }
-//
-//        //water:
-//        for (int y = 48*5; y < 8*48; y+=48) {
-//            for (int x = 48 * 4; x < 12 * 48; x += 48) {
-//                graphics2D.drawImage(tile[1].image, x, y, gamePanel.tileSize, gamePanel.tileSize, null);
-//            }
-//        }
 
     }
 

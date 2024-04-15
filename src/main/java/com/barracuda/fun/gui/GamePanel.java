@@ -1,5 +1,6 @@
 package com.barracuda.fun.gui;
 
+import com.barracuda.fun.UI;
 import com.barracuda.fun.gui.entity.Player;
 import com.barracuda.fun.gui.item.Item;
 import com.barracuda.fun.gui.tile.TileManager;
@@ -14,56 +15,40 @@ import org.springframework.stereotype.Component;
 @Component
 public class GamePanel extends JPanel implements Runnable {
 
-
     //SCREEN SETTINGS:
     public static final int FPS = 60;
-
-    public final int originalTileSize = 16; //TODO: move to properties file
-
+    public final int originalTileSize = 16;
     public final int scale = 3;
-
     public final int tileSize = originalTileSize * scale;
-
     public final int maxScreenColumn = 16;
-
     public final int maxScreenRow = 12;
-
     public final int screenWidth = tileSize * maxScreenColumn;
-
     public final int screenHeight = tileSize * maxScreenRow;
 
     // WORLD SETTINGS:
     public final int maxWorldColumn = 50;
-
     public final int maxWorldRow = 50;
-
-//    public final int worldWidth = tileSize * maxWorldColumn;
-//
-//    public final int worldHeight = tileSize * maxWorldRow;
 
     // SYSTEM:
     public final TileManager tileManager = new TileManager(this);
-
     private final KeyHandler keyHandler;
-
-    Sound sound = new Sound();
-
-    Thread gameThread;
-
+    Sound music = new Sound();
+    Sound soundEffect = new Sound();
+    public Thread gameThread;
     public final CollisionChecker collisionChecker = new CollisionChecker(this);
-
     ItemPlacer itemPlacer = new ItemPlacer(this);
+    public UI ui = new UI(this);
+    public  Graphics2D graphics2D;
 
     // ENTITY AND OBJECT:
     public Player player ;
+    public Item[] items = new Item[99];
 
-    public Item[] items = new Item[10];
+    // GAME STATE:
+    public int gameState;
+    public final int playState = 1;
+    public final int pauseState = 2;
 
-//    int playerX = 100;
-//
-//    int playerY = 100;
-//
-//    int playerSpeed = 4;
 
     public GamePanel(KeyHandler keyHandler) {
         this.keyHandler = keyHandler;
@@ -79,6 +64,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void setupGame() {
         itemPlacer.setItem();
         playMusic(0);
+        gameState = playState;
     }
 
     public void startGameThread() {
@@ -101,17 +87,18 @@ public class GamePanel extends JPanel implements Runnable {
                 repaint(); //here we call paintComponent(Graphics graphics) method
                 delta--;
             }
-
         }
     }
 
     public void update(Player player) {
-        player.update();
+        if (!keyHandler.paused) {
+            player.update();
+        }
     }
 
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
-        Graphics2D graphics2D = (Graphics2D) graphics;
+        graphics2D = (Graphics2D) graphics;
         tileManager.draw(graphics2D);
         for(int i = 0; i < items.length; i++) {
             if(items[i] != null) {
@@ -119,23 +106,26 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
         player.draw(graphics2D);
+        ui.draw(graphics2D);
+        if (keyHandler.paused) {
+            ui.drawPauseScreen();
+        }
         graphics2D.dispose();
     }
 
     public void playMusic(int i) {
-        sound.setFile(i);
-        sound.play();
-        sound.loop();
+        music.setFile(i);
+        music.play();
+        music.loop();
     }
 
     public void stopMusic() {
-        sound.stop();
+        music.stop();
     }
 
     public void playSoundEffect(int i) {
-        sound.setFile(i);
-        sound.play();
-
+        soundEffect.setFile(i);
+        soundEffect.play();
     }
 
 }

@@ -2,16 +2,16 @@ package com.barracuda.fun.gui.entity;
 
 import com.barracuda.fun.gui.GamePanel;
 import com.barracuda.fun.gui.KeyHandler;
+import com.barracuda.fun.gui.UtilityTool;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import org.springframework.context.annotation.Scope;
+
 import org.springframework.stereotype.Component;
 
 @Component
-@Scope(scopeName = "prototype")
 public class Player extends Entity {
 
     private final GamePanel gamePanel;
@@ -23,6 +23,16 @@ public class Player extends Entity {
     public final int screenY;
 
     public int keyAmount = 0;
+
+    public int coinAmount = 0;
+
+    public int chestAmount = 0;
+
+    public int fishAmount = 0;
+
+    public int sausageAmount = 0;
+
+    public boolean bootsOn = false;
 
     public Player (GamePanel gamePanel, KeyHandler keyHandler) { //should it depend on GamePanel and KeyHandler?
         this.gamePanel = gamePanel;
@@ -48,18 +58,27 @@ public class Player extends Entity {
     }
 
     public void getPlayerImage() {
+        up_1 = setup("white_cat_up_1");
+        up_2 = setup("white_cat_up_2");
+        down_1 = setup("white_cat_down_1");
+        down_2 = setup("white_cat_down_2");
+        left_1 = setup("white_cat_left_1");
+        left_2 = setup("white_cat_left_2");
+        right_1 = setup("white_cat_right_1");
+        right_2 = setup("white_cat_right_2");
+    }
+
+    public BufferedImage setup(String imageName) {
+        UtilityTool tool = new UtilityTool();
+        BufferedImage scaledImage = null;
         try {
-            up_1 = ImageIO.read(getClass().getResourceAsStream("/graphics/player/white_cat_up_1.png"));
-            up_2 = ImageIO.read(getClass().getResourceAsStream("/graphics/player/white_cat_up_2.png"));
-            down_1 = ImageIO.read(getClass().getResourceAsStream("/graphics/player/white_cat_down_1.png"));
-            down_2 = ImageIO.read(getClass().getResourceAsStream("/graphics/player/white_cat_down_2.png"));
-            left_1 = ImageIO.read(getClass().getResourceAsStream("/graphics/player/white_cat_left_1.png"));
-            left_2 = ImageIO.read(getClass().getResourceAsStream("/graphics/player/white_cat_left_2.png"));
-            right_1 = ImageIO.read(getClass().getResourceAsStream("/graphics/player/white_cat_right_1.png"));
-            right_2 = ImageIO.read(getClass().getResourceAsStream("/graphics/player/white_cat_right_2.png"));
-        }catch (IOException e) {
+            scaledImage = ImageIO.read(getClass().getResourceAsStream("/graphics/player/" + imageName + ".png"));
+            scaledImage = tool.scaleImage(scaledImage, gamePanel.tileSize, gamePanel.tileSize);
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
+        return scaledImage;
     }
 
     public void update() { //gets called 60 times per second.
@@ -124,38 +143,58 @@ public class Player extends Entity {
                     gamePanel.playSoundEffect(2);
                     keyAmount++;
                     gamePanel.items[index] = null;
+                    gamePanel.ui.showMessage("You got a key!");
                     break;
                 case "door":
                     if(keyAmount > 0) {
                         gamePanel.playSoundEffect(3);
                         gamePanel.items[index] = null;
                         keyAmount--;
+                        gamePanel.ui.showMessage("You have opened the door!");
+                    }
+                    else {
+                        gamePanel.ui.showMessage("You need a key.");
                     }
                     break;
                 case "chest":
                     gamePanel.playSoundEffect(2);
+                    chestAmount++;
                     gamePanel.items[index] = null;
+                    gamePanel.ui.showMessage("You've got a chest!");
+                    gamePanel.ui.gameFinished = true;
+                    gamePanel.stopMusic();
+                    gamePanel.playSoundEffect(4);
                     break;
                 case "fish":
                     gamePanel.playSoundEffect(2);
+                    fishAmount++;
                     gamePanel.items[index] = null;
+                    gamePanel.ui.showMessage("You got a fish!");
                     break;
                 case "coin":
                     gamePanel.playSoundEffect(2);
+                    coinAmount++;
                     gamePanel.items[index] = null;
+                    gamePanel.ui.showMessage("You got a coin!");
                     break;
                 case "boots":
                     gamePanel.playSoundEffect(1);
+                    bootsOn = true;
                     speed += 4;
                     gamePanel.items[index] = null;
+                    gamePanel.ui.showMessage("You got speed boots!");
+                    break;
+                case "sausage":
+                    gamePanel.playSoundEffect(2);
+                    sausageAmount++;
+                    gamePanel.items[index] = null;
+                    gamePanel.ui.showMessage("You have eaten sausage!");
                     break;
             }
         }
     }
 
     public void draw(Graphics2D graphics2D) {
-//        graphics2D.setColor(Color.white);
-//        graphics2D.fillRect(x, y, gamePanel.tileSize, gamePanel.tileSize);
         BufferedImage image = null;
         switch (direction) {
             case "up":
@@ -191,7 +230,7 @@ public class Player extends Entity {
                 }
                 break;
         }
-        graphics2D.drawImage(image, screenX, screenY, gamePanel.tileSize, gamePanel.tileSize, null);
+        graphics2D.drawImage(image, screenX, screenY, null);
     }
 
 }

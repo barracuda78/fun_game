@@ -6,6 +6,7 @@ import com.barracuda.fun.gui.item.CoinItem;
 import com.barracuda.fun.gui.item.DoorItem;
 import com.barracuda.fun.gui.item.FishItem;
 import com.barracuda.fun.gui.item.KeyItem;
+import com.barracuda.fun.gui.item.SausageItem;
 
 public class ItemPlacer {
 
@@ -16,11 +17,11 @@ public class ItemPlacer {
     }
 
     public void setItem() {
-        gamePanel.items[0] = new KeyItem();
+        gamePanel.items[0] = new KeyItem(gamePanel);
         gamePanel.items[0].worldX = 23 * gamePanel.tileSize;
         gamePanel.items[0].worldY = 7 * gamePanel.tileSize;
 
-        gamePanel.items[1] = new KeyItem();
+        gamePanel.items[1] = new KeyItem(gamePanel);
         gamePanel.items[1].worldX = 23 * gamePanel.tileSize;
         gamePanel.items[1].worldY = 40 * gamePanel.tileSize;
 
@@ -47,6 +48,14 @@ public class ItemPlacer {
         gamePanel.items[7] = new BootsItem();
         gamePanel.items[7].worldX = 10 * gamePanel.tileSize;
         gamePanel.items[7].worldY = 36 * gamePanel.tileSize;
+
+        gamePanel.items[8] = new SausageItem();
+        gamePanel.items[8].worldX = 40 * gamePanel.tileSize;
+        gamePanel.items[8].worldY = 46 * gamePanel.tileSize;
+
+        gamePanel.items[9] = new BootsItem();
+        gamePanel.items[9].worldX = 40 * gamePanel.tileSize;
+        gamePanel.items[9].worldY = 17 * gamePanel.tileSize;
     }
 
 }
