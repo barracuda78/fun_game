@@ -1,20 +1,19 @@
 package com.barracuda.fun.gui.entity;
 
+import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_HEIGHT;
+import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_WIDTH;
+import static com.barracuda.fun.gui.constants.ScreenSettings.TILE_SIZE;
+
 import com.barracuda.fun.gui.GamePanel;
 import com.barracuda.fun.gui.KeyHandler;
-import com.barracuda.fun.gui.UtilityTool;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 
 import org.springframework.stereotype.Component;
 
 @Component
 public class Player extends Entity {
-
-    private final GamePanel gamePanel;
 
     private final KeyHandler keyHandler;
 
@@ -35,10 +34,10 @@ public class Player extends Entity {
     public boolean bootsOn = false;
 
     public Player (GamePanel gamePanel, KeyHandler keyHandler) { //should it depend on GamePanel and KeyHandler?
-        this.gamePanel = gamePanel;
+        super(gamePanel);
         this.keyHandler = keyHandler;
-        screenX = gamePanel.screenWidth / 2 - (gamePanel.tileSize / 2);
-        screenY = gamePanel.screenHeight / 2 - (gamePanel.tileSize / 2);
+        screenX = SCREEN_WIDTH / 2 - (TILE_SIZE / 2);
+        screenY = SCREEN_HEIGHT / 2 - (TILE_SIZE / 2);
         solidArea = new Rectangle();
         solidArea.x = 8;
         solidArea.y = 16;
@@ -51,34 +50,21 @@ public class Player extends Entity {
     }
 
     public void setDefaultValues() { //do not hardcode. Try to set from properties file? @PostConstruct?
-        worldX = gamePanel.tileSize * 23; //players position on the world map
-        worldY = gamePanel.tileSize * 21; //players position on the world map
+        worldX = TILE_SIZE * 23; //players position on the world map
+        worldY = TILE_SIZE * 21; //players position on the world map
         speed = 4;
         direction = "down";
     }
 
     public void getPlayerImage() {
-        up_1 = setup("white_cat_up_1");
-        up_2 = setup("white_cat_up_2");
-        down_1 = setup("white_cat_down_1");
-        down_2 = setup("white_cat_down_2");
-        left_1 = setup("white_cat_left_1");
-        left_2 = setup("white_cat_left_2");
-        right_1 = setup("white_cat_right_1");
-        right_2 = setup("white_cat_right_2");
-    }
-
-    public BufferedImage setup(String imageName) {
-        UtilityTool tool = new UtilityTool();
-        BufferedImage scaledImage = null;
-        try {
-            scaledImage = ImageIO.read(getClass().getResourceAsStream("/graphics/player/" + imageName + ".png"));
-            scaledImage = tool.scaleImage(scaledImage, gamePanel.tileSize, gamePanel.tileSize);
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return scaledImage;
+        up_1 = setup("/graphics/player/white_cat_up_1.png");
+        up_2 = setup("/graphics/player/white_cat_up_2.png");
+        down_1 = setup("/graphics/player/white_cat_down_1.png");
+        down_2 = setup("/graphics/player/white_cat_down_2.png");
+        left_1 = setup("/graphics/player/white_cat_left_1.png");
+        left_2 = setup("/graphics/player/white_cat_left_2.png");
+        right_1 = setup("/graphics/player/white_cat_right_1.png");
+        right_2 = setup("/graphics/player/white_cat_right_2.png");
     }
 
     public void update() { //gets called 60 times per second.
@@ -106,7 +92,10 @@ public class Player extends Entity {
             int itemIndex = gamePanel.collisionChecker.checkItem(this, true);
             pickUpItem(itemIndex);
 
-            if (collisionOn == false) {
+            int npcIndex = gamePanel.collisionChecker.checkEntity(this, gamePanel.npcs);
+            interactNpc(npcIndex);
+
+            if (!collisionOn) {
                 switch (direction) {
                     case "up":
                         worldY -= speed;
@@ -191,6 +180,12 @@ public class Player extends Entity {
                     gamePanel.ui.showMessage("You have eaten sausage!");
                     break;
             }
+        }
+    }
+
+    public void interactNpc(int index) {
+        if (index != 999) {
+            System.out.println("=========you are hitting an NPC!========");
         }
     }
 

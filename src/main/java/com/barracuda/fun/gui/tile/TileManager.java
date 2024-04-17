@@ -1,7 +1,11 @@
 package com.barracuda.fun.gui.tile;
 
+import static com.barracuda.fun.gui.constants.ScreenSettings.TILE_SIZE;
+import static com.barracuda.fun.gui.constants.WorldSettings.MAX_WORLD_COLUMN;
+import static com.barracuda.fun.gui.constants.WorldSettings.MAX_WORLD_ROW;
+
 import com.barracuda.fun.gui.GamePanel;
-import com.barracuda.fun.gui.UtilityTool;
+import com.barracuda.fun.gui.ImageScalerServiceImpl;
 import java.awt.Graphics2D;
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -21,7 +25,7 @@ public class TileManager {
     public TileManager(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
         tile = new Tile[99];
-        mapTile = new int[gamePanel.maxWorldColumn][gamePanel.maxWorldRow];
+        mapTile = new int[MAX_WORLD_COLUMN][MAX_WORLD_ROW];
         getTileImage();
 //        loadMap("/graphics/maps/world_01.txt");
         loadMap("/graphics/maps/world_01_enhanced.txt");
@@ -59,11 +63,11 @@ public class TileManager {
 
 
     public void setup(int index, String imageName, boolean collision) {
-        UtilityTool tool = new UtilityTool();
+        ImageScalerServiceImpl tool = new ImageScalerServiceImpl();
         try {
             tile[index] = new Tile();
             tile[index].image = ImageIO.read(getClass().getResourceAsStream("/graphics/tiles/" + imageName + ".png"));
-            tile[index].image = tool.scaleImage(tile[index].image, gamePanel.tileSize, gamePanel.tileSize);
+            tile[index].image = tool.scaleImage(tile[index].image, TILE_SIZE, TILE_SIZE);
             tile[index].collision = collision;
         }
         catch (Exception e) {
@@ -78,15 +82,15 @@ public class TileManager {
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             int col = 0;
             int row = 0;
-            while(col < gamePanel.maxWorldColumn && row < gamePanel.maxWorldRow) {
+            while(col < MAX_WORLD_COLUMN && row < MAX_WORLD_ROW) {
                 String line = br.readLine();
-                while(col < gamePanel.maxWorldColumn) {
+                while(col < MAX_WORLD_COLUMN) {
                     String numbers[] = line.split(" ");
                     int num = Integer.parseInt(numbers[col]);
                     mapTile[col][row] = num;
                     col++;
                 }
-                if(col == gamePanel.maxWorldColumn) {
+                if(col == MAX_WORLD_COLUMN) {
                     col = 0;
                     row++;
                 }
@@ -104,27 +108,27 @@ public class TileManager {
         int worldRow = 0;
 
 
-        while (worldColumn < gamePanel.maxWorldColumn && worldRow < gamePanel.maxWorldRow) {
+        while (worldColumn < MAX_WORLD_COLUMN && worldRow < MAX_WORLD_ROW) {
             int tileNum = mapTile[worldColumn][worldRow];
 
-            int worldX = worldColumn * gamePanel.tileSize;
-            int worldY = worldRow * gamePanel.tileSize;
+            int worldX = worldColumn * TILE_SIZE;
+            int worldY = worldRow * TILE_SIZE;
             int screenX = worldX - gamePanel.player.worldX + gamePanel.player.screenX;
             int screenY = worldY - gamePanel.player.worldY + gamePanel.player.screenY;
 
             if (
-                worldX + gamePanel.tileSize > gamePanel.player.worldX - gamePanel.player.screenX
+                worldX + TILE_SIZE > gamePanel.player.worldX - gamePanel.player.screenX
                     &&
-                worldX  - gamePanel.tileSize < gamePanel.player.worldX + gamePanel.player.screenX
+                worldX  - TILE_SIZE < gamePanel.player.worldX + gamePanel.player.screenX
                     &&
-                worldY  + gamePanel.tileSize > gamePanel.player.worldY - gamePanel.player.screenY
+                worldY  + TILE_SIZE > gamePanel.player.worldY - gamePanel.player.screenY
                     &&
-                worldY  - gamePanel.tileSize < gamePanel.player.worldY + gamePanel.player.screenY
+                worldY  - TILE_SIZE < gamePanel.player.worldY + gamePanel.player.screenY
             ) {
-                graphics2D.drawImage(tile[tileNum].image, screenX, screenY, gamePanel.tileSize, gamePanel.tileSize, null);
+                graphics2D.drawImage(tile[tileNum].image, screenX, screenY, TILE_SIZE, TILE_SIZE, null);
             }
             worldColumn++;
-            if (worldColumn == gamePanel.maxWorldColumn) {
+            if (worldColumn == MAX_WORLD_COLUMN) {
                 worldColumn = 0;
                 worldRow++;
             }

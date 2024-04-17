@@ -1,5 +1,9 @@
 package com.barracuda.fun;
 
+import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_HEIGHT;
+import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_WIDTH;
+import static com.barracuda.fun.gui.constants.ScreenSettings.TILE_SIZE;
+
 import com.barracuda.fun.gui.GamePanel;
 import com.barracuda.fun.gui.item.BootsItem;
 import com.barracuda.fun.gui.item.ChestItem;
@@ -69,7 +73,7 @@ public class UI {
     }
 
     public void draw(Graphics2D g2) {
-        this.graphics2D = g2;
+        this.graphics2D = g2; //TODO: do not initialize it like this!
 
         //old stuff:
         if (gameFinished) {
@@ -80,19 +84,19 @@ public class UI {
             //center coordinates:
             String text = "You won the game!";
             int x = getXForCenterText(text);
-            int y = gamePanel.screenHeight / 2 - (gamePanel.tileSize * 3);
+            int y = SCREEN_HEIGHT / 2 - (TILE_SIZE * 3);
             graphics2D.drawString(text, x, y);
 
             text = "Your time is: " + decimalFormat.format(playTime);
             x = getXForCenterText(text);
-            y = gamePanel.screenHeight / 2 + (gamePanel.tileSize * 4);
+            y = SCREEN_HEIGHT / 2 + (TILE_SIZE * 4);
             graphics2D.drawString(text, x, y);
 
             graphics2D.setFont(arial_80_bold_font);
             graphics2D.setColor(Color.YELLOW);
             text = "YOU WIN!";
             x = getXForCenterText(text);
-            y = gamePanel.screenHeight / 2 + (gamePanel.tileSize * 2);
+            y = SCREEN_HEIGHT / 2 + (TILE_SIZE * 2);
             graphics2D.drawString(text, x, y);
 
             gamePanel.gameThread = null;
@@ -101,32 +105,33 @@ public class UI {
             graphics2D.setFont(arial_40_font);
             graphics2D.setColor(Color.WHITE);
 
-            graphics2D.drawImage(keyImage, gamePanel.tileSize / 2, gamePanel.tileSize / 2,
-                gamePanel.tileSize, gamePanel.tileSize, null);
+            graphics2D.drawImage(keyImage, TILE_SIZE / 2, TILE_SIZE / 2,
+                TILE_SIZE, TILE_SIZE, null);
             graphics2D.drawString(": " + gamePanel.player.keyAmount, 74, 60);
 
-            graphics2D.drawImage(coinImage, gamePanel.tileSize * 3, gamePanel.tileSize / 2,
-                gamePanel.tileSize, gamePanel.tileSize, null);
+            graphics2D.drawImage(coinImage, TILE_SIZE * 3, TILE_SIZE / 2,
+                TILE_SIZE, TILE_SIZE, null);
             graphics2D.drawString(": " + gamePanel.player.coinAmount, 192, 60);
 
-            graphics2D.drawImage(chestImage, gamePanel.tileSize * 6, gamePanel.tileSize / 2,
-                gamePanel.tileSize, gamePanel.tileSize, null);
+            graphics2D.drawImage(chestImage, TILE_SIZE * 6, TILE_SIZE / 2,
+                TILE_SIZE, TILE_SIZE, null);
             graphics2D.drawString(": " + gamePanel.player.chestAmount, 340, 60);
 
-            graphics2D.drawImage(fishImage, gamePanel.tileSize * 9, gamePanel.tileSize / 2,
-                gamePanel.tileSize, gamePanel.tileSize, null);
+            graphics2D.drawImage(fishImage, TILE_SIZE * 9, TILE_SIZE / 2,
+                TILE_SIZE, TILE_SIZE, null);
             graphics2D.drawString(": " + gamePanel.player.fishAmount, 484, 60);
 
-            graphics2D.drawImage(sausageImage, gamePanel.tileSize * 12, gamePanel.tileSize / 2,
-                gamePanel.tileSize, gamePanel.tileSize, null);
+            graphics2D.drawImage(sausageImage, TILE_SIZE * 12, TILE_SIZE / 2,
+                TILE_SIZE, TILE_SIZE, null);
             graphics2D.drawString(": " + gamePanel.player.sausageAmount, 628, 60);
 
             playTime += (double) 1/60;
-            graphics2D.drawString("Time:" + decimalFormat.format(playTime), gamePanel.tileSize * 11, gamePanel.tileSize * 11);
+            graphics2D.drawString("Time:" + decimalFormat.format(playTime), TILE_SIZE * 11, TILE_SIZE
+                * 11);
 
             if (gamePanel.player.bootsOn) {
-                graphics2D.drawImage(bootsImage, gamePanel.tileSize / 2, gamePanel.tileSize * 11,
-                    gamePanel.tileSize, gamePanel.tileSize, null);
+                graphics2D.drawImage(bootsImage, TILE_SIZE / 2, TILE_SIZE * 11,
+                    TILE_SIZE, TILE_SIZE, null);
                 graphics2D.drawString(": " + (600 - bootsLifeTime), 74, 576);
                 bootsLifeTime++;
                 if (bootsLifeTime > 600) {
@@ -138,7 +143,7 @@ public class UI {
 
             if (isMessageOn) {
                 graphics2D.setFont(graphics2D.getFont().deriveFont(30f));
-                graphics2D.drawString(message, gamePanel.tileSize / 2, gamePanel.tileSize * 5);
+                graphics2D.drawString(message, TILE_SIZE / 2, TILE_SIZE * 5);
                 messageLifeTime++;
                 if (messageLifeTime > 120) {
                     messageLifeTime = 0;
@@ -152,14 +157,14 @@ public class UI {
     public void drawPauseScreen() {
         String text = "PAUSED";
         int x = getXForCenterText(text);
-        int y = gamePanel.screenHeight / 2;
+        int y = SCREEN_HEIGHT / 2;
         graphics2D.drawString(text, x, y);
 
     }
 
     public int getXForCenterText(String text) {
         int length = (int) graphics2D.getFontMetrics().getStringBounds(text, graphics2D).getWidth();
-        return gamePanel.screenWidth / 2 - length / 2;
+        return SCREEN_WIDTH / 2 - length / 2;
     }
 
 }

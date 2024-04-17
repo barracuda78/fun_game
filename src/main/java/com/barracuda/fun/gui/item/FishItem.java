@@ -3,6 +3,7 @@ package com.barracuda.fun.gui.item;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
+
 public class FishItem extends Item {
 
     public FishItem() {

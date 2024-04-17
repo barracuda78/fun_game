@@ -1,6 +1,11 @@
 package com.barracuda.fun.gui;
 
+import static com.barracuda.fun.gui.constants.ScreenSettings.FPS;
+import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_HEIGHT;
+import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_WIDTH;
+
 import com.barracuda.fun.UI;
+import com.barracuda.fun.gui.entity.Entity;
 import com.barracuda.fun.gui.entity.Player;
 import com.barracuda.fun.gui.item.Item;
 import com.barracuda.fun.gui.tile.TileManager;
@@ -14,20 +19,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class GamePanel extends JPanel implements Runnable {
-
-    //SCREEN SETTINGS:
-    public static final int FPS = 60;
-    public final int originalTileSize = 16;
-    public final int scale = 3;
-    public final int tileSize = originalTileSize * scale;
-    public final int maxScreenColumn = 16;
-    public final int maxScreenRow = 12;
-    public final int screenWidth = tileSize * maxScreenColumn;
-    public final int screenHeight = tileSize * maxScreenRow;
-
-    // WORLD SETTINGS:
-    public final int maxWorldColumn = 50;
-    public final int maxWorldRow = 50;
 
     // SYSTEM:
     public final TileManager tileManager = new TileManager(this);
@@ -43,17 +34,19 @@ public class GamePanel extends JPanel implements Runnable {
     // ENTITY AND OBJECT:
     public Player player ;
     public Item[] items = new Item[99];
+    public Entity[] npcs = new Entity[10];
 
     // GAME STATE:
     public int gameState;
     public final int playState = 1;
     public final int pauseState = 2;
+    public final int dialogState = 3;
 
 
     public GamePanel(KeyHandler keyHandler) {
         this.keyHandler = keyHandler;
         player = new Player(this, keyHandler);
-        this.setPreferredSize(new Dimension(screenWidth, screenHeight));
+        this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
         this.setLayout(new BorderLayout());
@@ -63,6 +56,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void setupGame() {
         itemPlacer.setItem();
+        itemPlacer.setNpc();
         playMusic(0);
         gameState = playState;
     }
@@ -93,6 +87,11 @@ public class GamePanel extends JPanel implements Runnable {
     public void update(Player player) {
         if (!keyHandler.paused) {
             player.update();
+            for (int i = 0; i < npcs.length; i++) {
+                if(npcs[i] != null) {
+                    npcs[i].update();
+                }
+            }
         }
     }
 
@@ -105,10 +104,16 @@ public class GamePanel extends JPanel implements Runnable {
                 items[i].draw(graphics2D, this);
             }
         }
+        for(int i = 0; i < npcs.length; i++) {
+            if(npcs[i] != null) {
+                npcs[i].draw(graphics2D);
+            }
+        }
         player.draw(graphics2D);
         ui.draw(graphics2D);
         if (keyHandler.paused) {
             ui.drawPauseScreen();
+            music.stop();
         }
         graphics2D.dispose();
     }

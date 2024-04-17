@@ -4,7 +4,8 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import org.springframework.stereotype.Service;
 
-public class UtilityTool {
+@Service
+public class ImageScalerServiceImpl {
 
     public BufferedImage scaleImage(BufferedImage originalImage, int width, int height) {
         BufferedImage scaledImage = new BufferedImage(width, height, originalImage.getType());
