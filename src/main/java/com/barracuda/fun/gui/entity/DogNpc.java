@@ -1,12 +1,13 @@
 package com.barracuda.fun.gui.entity;
 
+import com.barracuda.fun.gui.CollisionChecker;
 import com.barracuda.fun.gui.GamePanel;
 import java.util.Random;
 
 public class DogNpc extends Entity {
 
-    public DogNpc(GamePanel gamePanel) {
-        super(gamePanel);
+    public DogNpc(CollisionChecker collisionChecker) {
+        super(collisionChecker);
         direction = "down";
         speed = 1;
         getImage();

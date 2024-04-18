@@ -2,8 +2,6 @@ package com.barracuda.fun.gui;
 
 import static com.barracuda.fun.gui.constants.ScreenSettings.TILE_SIZE;
 
-import com.barracuda.fun.gui.entity.DogNpc;
-import com.barracuda.fun.gui.entity.Entity;
 import com.barracuda.fun.gui.item.BootsItem;
 import com.barracuda.fun.gui.item.ChestItem;
 import com.barracuda.fun.gui.item.CoinItem;
@@ -11,21 +9,17 @@ import com.barracuda.fun.gui.item.DoorItem;
 import com.barracuda.fun.gui.item.FishItem;
 import com.barracuda.fun.gui.item.KeyItem;
 import com.barracuda.fun.gui.item.SausageItem;
+import org.springframework.stereotype.Service;
 
-public class ItemPlacer {
+@Service
+public class ItemPlacerServiceImpl {
 
-    public GamePanel gamePanel;
-
-    public ItemPlacer(GamePanel gamePanel) {
-        this.gamePanel = gamePanel;
-    }
-
-    public void setItem() {
-        gamePanel.items[0] = new KeyItem(gamePanel);
+    public void setItem(GamePanel gamePanel) {
+        gamePanel.items[0] = new KeyItem();
         gamePanel.items[0].worldX = 23 * TILE_SIZE;
         gamePanel.items[0].worldY = 7 * TILE_SIZE;
 
-        gamePanel.items[1] = new KeyItem(gamePanel);
+        gamePanel.items[1] = new KeyItem();
         gamePanel.items[1].worldX = 23 * TILE_SIZE;
         gamePanel.items[1].worldY = 40 * TILE_SIZE;
 
@@ -60,13 +54,6 @@ public class ItemPlacer {
         gamePanel.items[9] = new BootsItem();
         gamePanel.items[9].worldX = 40 * TILE_SIZE;
         gamePanel.items[9].worldY = 17 * TILE_SIZE;
-    }
-
-    public void setNpc() {
-        Entity dog = new DogNpc(gamePanel);
-        dog.worldX = TILE_SIZE * 21;
-        dog.worldY = TILE_SIZE * 21;
-        gamePanel.npcs[0] = dog;
     }
 
 }

@@ -4,8 +4,11 @@ import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_HEIGHT;
 import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_WIDTH;
 import static com.barracuda.fun.gui.constants.ScreenSettings.TILE_SIZE;
 
-import com.barracuda.fun.gui.GamePanel;
+import com.barracuda.fun.gui.CollisionChecker;
 import com.barracuda.fun.gui.KeyHandler;
+import com.barracuda.fun.gui.SoundServiceImpl;
+import com.barracuda.fun.gui.UI;
+import com.barracuda.fun.gui.item.Item;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -16,6 +19,10 @@ import org.springframework.stereotype.Component;
 public class Player extends Entity {
 
     private final KeyHandler keyHandler;
+
+    private final SoundServiceImpl soundService;
+
+    private final UI ui;
 
     public final int screenX;
 
@@ -33,9 +40,11 @@ public class Player extends Entity {
 
     public boolean bootsOn = false;
 
-    public Player (GamePanel gamePanel, KeyHandler keyHandler) { //should it depend on GamePanel and KeyHandler?
-        super(gamePanel);
+    public Player (CollisionChecker collisionChecker, KeyHandler keyHandler, SoundServiceImpl soundService, UI ui) { //should it depend on GamePanel and KeyHandler?
+        super(collisionChecker);
         this.keyHandler = keyHandler;
+        this.soundService = soundService;
+        this.ui = ui;
         screenX = SCREEN_WIDTH / 2 - (TILE_SIZE / 2);
         screenY = SCREEN_HEIGHT / 2 - (TILE_SIZE / 2);
         solidArea = new Rectangle();
@@ -67,7 +76,7 @@ public class Player extends Entity {
         right_2 = setup("/graphics/player/white_cat_right_2.png");
     }
 
-    public void update() { //gets called 60 times per second.
+    public void update(Item[] items, Entity[] npcs) { //gets called 60 times per second.
 
         if (keyHandler.downPressed || keyHandler.leftPressed || keyHandler.upPressed || keyHandler.rightPressed) {
             if (keyHandler.upPressed) {
@@ -86,13 +95,13 @@ public class Player extends Entity {
 
             // Check tile collision:
             collisionOn = false;
-            gamePanel.collisionChecker.checkTile(this);
+            collisionChecker.checkTile(this);
 
             // Check item collision:
-            int itemIndex = gamePanel.collisionChecker.checkItem(this, true);
-            pickUpItem(itemIndex);
+            int itemIndex = collisionChecker.checkItem(this, true, items);
+            pickUpItem(itemIndex, items);
 
-            int npcIndex = gamePanel.collisionChecker.checkEntity(this, gamePanel.npcs);
+            int npcIndex = collisionChecker.checkEntity(this, npcs);
             interactNpc(npcIndex);
 
             if (!collisionOn) {
@@ -124,60 +133,60 @@ public class Player extends Entity {
         }
     }
 
-    public void pickUpItem(int index) {
+    public void pickUpItem(int index, Item[] items) {
         if (index != 999) {
-            String itemName = gamePanel.items[index].name;
+            String itemName = items[index].name;
             switch (itemName) {
                 case "key":
-                    gamePanel.playSoundEffect(2);
+                    soundService.playSoundEffect(2);
                     keyAmount++;
-                    gamePanel.items[index] = null;
-                    gamePanel.ui.showMessage("You got a key!");
+                    items[index] = null;
+                    ui.showMessage("You got a key!");
                     break;
                 case "door":
                     if(keyAmount > 0) {
-                        gamePanel.playSoundEffect(3);
-                        gamePanel.items[index] = null;
+                        soundService.playSoundEffect(3);
+                        items[index] = null;
                         keyAmount--;
-                        gamePanel.ui.showMessage("You have opened the door!");
+                        ui.showMessage("You have opened the door!");
                     }
                     else {
-                        gamePanel.ui.showMessage("You need a key.");
+                        ui.showMessage("You need a key.");
                     }
                     break;
                 case "chest":
-                    gamePanel.playSoundEffect(2);
+                    soundService.playSoundEffect(2);
                     chestAmount++;
-                    gamePanel.items[index] = null;
-                    gamePanel.ui.showMessage("You've got a chest!");
-                    gamePanel.ui.gameFinished = true;
-                    gamePanel.stopMusic();
-                    gamePanel.playSoundEffect(4);
+                    items[index] = null;
+                    ui.showMessage("You've got a chest!");
+                    ui.gameFinished = true;
+                    soundService.stopMusic();
+                    soundService.playSoundEffect(4);
                     break;
                 case "fish":
-                    gamePanel.playSoundEffect(2);
+                    soundService.playSoundEffect(2);
                     fishAmount++;
-                    gamePanel.items[index] = null;
-                    gamePanel.ui.showMessage("You got a fish!");
+                    items[index] = null;
+                    ui.showMessage("You got a fish!");
                     break;
                 case "coin":
-                    gamePanel.playSoundEffect(2);
+                    soundService.playSoundEffect(2);
                     coinAmount++;
-                    gamePanel.items[index] = null;
-                    gamePanel.ui.showMessage("You got a coin!");
+                    items[index] = null;
+                    ui.showMessage("You got a coin!");
                     break;
                 case "boots":
-                    gamePanel.playSoundEffect(1);
+                    soundService.playSoundEffect(1);
                     bootsOn = true;
                     speed += 4;
-                    gamePanel.items[index] = null;
-                    gamePanel.ui.showMessage("You got speed boots!");
+                    items[index] = null;
+                    ui.showMessage("You got speed boots!");
                     break;
                 case "sausage":
-                    gamePanel.playSoundEffect(2);
+                    soundService.playSoundEffect(2);
                     sausageAmount++;
-                    gamePanel.items[index] = null;
-                    gamePanel.ui.showMessage("You have eaten sausage!");
+                    items[index] = null;
+                    ui.showMessage("You have eaten sausage!");
                     break;
             }
         }

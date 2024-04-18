@@ -1,10 +1,10 @@
-package com.barracuda.fun;
+package com.barracuda.fun.gui;
 
 import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_HEIGHT;
 import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_WIDTH;
 import static com.barracuda.fun.gui.constants.ScreenSettings.TILE_SIZE;
 
-import com.barracuda.fun.gui.GamePanel;
+import com.barracuda.fun.gui.entity.Player;
 import com.barracuda.fun.gui.item.BootsItem;
 import com.barracuda.fun.gui.item.ChestItem;
 import com.barracuda.fun.gui.item.CoinItem;
@@ -16,12 +16,12 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UI {
 
     Graphics2D graphics2D;
-
-    GamePanel gamePanel;
 
     Font arial_40_font;
 
@@ -49,11 +49,10 @@ public class UI {
 
     DecimalFormat decimalFormat = new DecimalFormat("#0.00");
 
-    public UI(GamePanel gamePanel) {
-        this.gamePanel = gamePanel;
+    public UI() {
         arial_40_font = new Font("Arial", Font.PLAIN, 40);
         arial_80_bold_font = new Font("Arial", Font.BOLD, 80);
-        KeyItem keyItem = new KeyItem(gamePanel);
+        KeyItem keyItem = new KeyItem();
         keyImage = keyItem.image;
         CoinItem coinItem = new CoinItem();
         coinImage = coinItem.image;
@@ -72,7 +71,7 @@ public class UI {
         isMessageOn = true;
     }
 
-    public void draw(Graphics2D g2) {
+    public void draw(Graphics2D g2, Player player, Thread gameThread) {
         this.graphics2D = g2; //TODO: do not initialize it like this!
 
         //old stuff:
@@ -99,7 +98,7 @@ public class UI {
             y = SCREEN_HEIGHT / 2 + (TILE_SIZE * 2);
             graphics2D.drawString(text, x, y);
 
-            gamePanel.gameThread = null;
+            gameThread = null;
 
         } else {
             graphics2D.setFont(arial_40_font);
@@ -107,36 +106,36 @@ public class UI {
 
             graphics2D.drawImage(keyImage, TILE_SIZE / 2, TILE_SIZE / 2,
                 TILE_SIZE, TILE_SIZE, null);
-            graphics2D.drawString(": " + gamePanel.player.keyAmount, 74, 60);
+            graphics2D.drawString(": " + player.keyAmount, 74, 60);
 
             graphics2D.drawImage(coinImage, TILE_SIZE * 3, TILE_SIZE / 2,
                 TILE_SIZE, TILE_SIZE, null);
-            graphics2D.drawString(": " + gamePanel.player.coinAmount, 192, 60);
+            graphics2D.drawString(": " + player.coinAmount, 192, 60);
 
             graphics2D.drawImage(chestImage, TILE_SIZE * 6, TILE_SIZE / 2,
                 TILE_SIZE, TILE_SIZE, null);
-            graphics2D.drawString(": " + gamePanel.player.chestAmount, 340, 60);
+            graphics2D.drawString(": " + player.chestAmount, 340, 60);
 
             graphics2D.drawImage(fishImage, TILE_SIZE * 9, TILE_SIZE / 2,
                 TILE_SIZE, TILE_SIZE, null);
-            graphics2D.drawString(": " + gamePanel.player.fishAmount, 484, 60);
+            graphics2D.drawString(": " + player.fishAmount, 484, 60);
 
             graphics2D.drawImage(sausageImage, TILE_SIZE * 12, TILE_SIZE / 2,
                 TILE_SIZE, TILE_SIZE, null);
-            graphics2D.drawString(": " + gamePanel.player.sausageAmount, 628, 60);
+            graphics2D.drawString(": " + player.sausageAmount, 628, 60);
 
             playTime += (double) 1/60;
             graphics2D.drawString("Time:" + decimalFormat.format(playTime), TILE_SIZE * 11, TILE_SIZE
                 * 11);
 
-            if (gamePanel.player.bootsOn) {
+            if (player.bootsOn) {
                 graphics2D.drawImage(bootsImage, TILE_SIZE / 2, TILE_SIZE * 11,
                     TILE_SIZE, TILE_SIZE, null);
                 graphics2D.drawString(": " + (600 - bootsLifeTime), 74, 576);
                 bootsLifeTime++;
                 if (bootsLifeTime > 600) {
-                    gamePanel.player.bootsOn = false;
-                    gamePanel.player.speed -= 4;
+                    player.bootsOn = false;
+                    player.speed -= 4;
                     bootsLifeTime = 0;
                 }
             }

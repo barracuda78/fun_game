@@ -2,8 +2,10 @@ package com.barracuda.fun.gui.entity;
 
 import static com.barracuda.fun.gui.constants.ScreenSettings.TILE_SIZE;
 
+import com.barracuda.fun.gui.CollisionChecker;
 import com.barracuda.fun.gui.GamePanel;
 import com.barracuda.fun.gui.ImageScalerServiceImpl;
+import com.barracuda.fun.gui.item.Item;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -12,7 +14,7 @@ import javax.imageio.ImageIO;
 
 public class Entity {
 
-    public final GamePanel gamePanel;
+    final CollisionChecker collisionChecker;
 
     public int worldX;
 
@@ -45,20 +47,20 @@ public class Entity {
 
     public int actionLockCounter = 0;
 
-    public Entity(GamePanel gamePanel) {
-        this.gamePanel = gamePanel;
+    public Entity(CollisionChecker collisionChecker) {
+        this.collisionChecker = collisionChecker;
     }
 
     public void setAction() {
 
     }
 
-    public void update() {
+    public void update(Player player, Item[] items) {
         setAction();
         collisionOn = false;
-        gamePanel.collisionChecker.checkTile(this);
-        gamePanel.collisionChecker.checkItem(this, false);
-        gamePanel.collisionChecker.checkPlayer(this);
+        collisionChecker.checkTile(this);
+        collisionChecker.checkItem(this, false, items);
+        collisionChecker.checkPlayer(this, player);
         //todo: copied from player class! refactor
         if (collisionOn == false) {
             switch (direction) {
@@ -88,19 +90,19 @@ public class Entity {
         }
     }
 
-    public void draw(Graphics2D graphics2D) {
+    public void draw(Graphics2D graphics2D, Player player) {
         BufferedImage image = null;
-        int screenX = worldX - gamePanel.player.worldX + gamePanel.player.screenX;
-        int screenY = worldY - gamePanel.player.worldY + gamePanel.player.screenY;
+        int screenX = worldX - player.worldX + player.screenX;
+        int screenY = worldY - player.worldY + player.screenY;
 
         if (
-            worldX + TILE_SIZE > gamePanel.player.worldX - gamePanel.player.screenX
+            worldX + TILE_SIZE > player.worldX - player.screenX
                 &&
-                worldX  - TILE_SIZE < gamePanel.player.worldX + gamePanel.player.screenX
+                worldX  - TILE_SIZE < player.worldX + player.screenX
                 &&
-                worldY  + TILE_SIZE > gamePanel.player.worldY - gamePanel.player.screenY
+                worldY  + TILE_SIZE > player.worldY - player.screenY
                 &&
-                worldY  - TILE_SIZE < gamePanel.player.worldY + gamePanel.player.screenY
+                worldY  - TILE_SIZE < player.worldY + player.screenY
         ) {
             switch (direction) {
                 case "up":

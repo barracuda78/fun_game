@@ -7,9 +7,8 @@ import com.barracuda.fun.gui.ImageScalerServiceImpl;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import lombok.RequiredArgsConstructor;
 
-public class Item {
+public abstract class Item {
 
     public BufferedImage image;
 

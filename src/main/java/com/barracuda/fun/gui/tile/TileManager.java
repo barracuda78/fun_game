@@ -6,6 +6,7 @@ import static com.barracuda.fun.gui.constants.WorldSettings.MAX_WORLD_ROW;
 
 import com.barracuda.fun.gui.GamePanel;
 import com.barracuda.fun.gui.ImageScalerServiceImpl;
+import com.barracuda.fun.gui.entity.Player;
 import java.awt.Graphics2D;
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -16,18 +17,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class TileManager {
 
-    GamePanel gamePanel;
-
     public Tile[] tile;
 
     public int[][] mapTile;
 
-    public TileManager(GamePanel gamePanel) {
-        this.gamePanel = gamePanel;
+    public TileManager() {
         tile = new Tile[99];
         mapTile = new int[MAX_WORLD_COLUMN][MAX_WORLD_ROW];
         getTileImage();
-//        loadMap("/graphics/maps/world_01.txt");
         loadMap("/graphics/maps/world_01_enhanced.txt");
     }
 
@@ -102,7 +99,7 @@ public class TileManager {
         }
     }
 
-    public void draw(Graphics2D graphics2D) {
+    public void draw(Graphics2D graphics2D, Player player) {
 
         int worldColumn = 0;
         int worldRow = 0;
@@ -113,17 +110,17 @@ public class TileManager {
 
             int worldX = worldColumn * TILE_SIZE;
             int worldY = worldRow * TILE_SIZE;
-            int screenX = worldX - gamePanel.player.worldX + gamePanel.player.screenX;
-            int screenY = worldY - gamePanel.player.worldY + gamePanel.player.screenY;
+            int screenX = worldX - player.worldX + player.screenX;
+            int screenY = worldY - player.worldY + player.screenY;
 
             if (
-                worldX + TILE_SIZE > gamePanel.player.worldX - gamePanel.player.screenX
+                worldX + TILE_SIZE > player.worldX - player.screenX
                     &&
-                worldX  - TILE_SIZE < gamePanel.player.worldX + gamePanel.player.screenX
+                worldX  - TILE_SIZE < player.worldX + player.screenX
                     &&
-                worldY  + TILE_SIZE > gamePanel.player.worldY - gamePanel.player.screenY
+                worldY  + TILE_SIZE > player.worldY - player.screenY
                     &&
-                worldY  - TILE_SIZE < gamePanel.player.worldY + gamePanel.player.screenY
+                worldY  - TILE_SIZE < player.worldY + player.screenY
             ) {
                 graphics2D.drawImage(tile[tileNum].image, screenX, screenY, TILE_SIZE, TILE_SIZE, null);
             }

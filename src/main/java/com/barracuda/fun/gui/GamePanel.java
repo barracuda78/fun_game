@@ -4,7 +4,6 @@ import static com.barracuda.fun.gui.constants.ScreenSettings.FPS;
 import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_HEIGHT;
 import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_WIDTH;
 
-import com.barracuda.fun.UI;
 import com.barracuda.fun.gui.entity.Entity;
 import com.barracuda.fun.gui.entity.Player;
 import com.barracuda.fun.gui.item.Item;
@@ -21,15 +20,17 @@ import org.springframework.stereotype.Component;
 public class GamePanel extends JPanel implements Runnable {
 
     // SYSTEM:
-    public final TileManager tileManager = new TileManager(this);
+    private final TileManager tileManager;
     private final KeyHandler keyHandler;
-    Sound music = new Sound();
-    Sound soundEffect = new Sound();
+    private final CollisionChecker collisionChecker;
+    private final ItemPlacerServiceImpl itemPlacerService;
+    private final NpcPlacerServiceImpl npcPlacerService;
+    private final SoundServiceImpl soundService;
+    private final UI userMenu;
+
+
     public Thread gameThread;
-    public final CollisionChecker collisionChecker = new CollisionChecker(this);
-    ItemPlacer itemPlacer = new ItemPlacer(this);
-    public UI ui = new UI(this);
-    public  Graphics2D graphics2D;
+    public Graphics2D graphics2D;
 
     // ENTITY AND OBJECT:
     public Player player ;
@@ -43,9 +44,15 @@ public class GamePanel extends JPanel implements Runnable {
     public final int dialogState = 3;
 
 
-    public GamePanel(KeyHandler keyHandler) {
+    public GamePanel(KeyHandler keyHandler, ItemPlacerServiceImpl itemPlacerService, NpcPlacerServiceImpl npcPlacerService, TileManager tileManager, CollisionChecker collisionChecker, SoundServiceImpl soundService, UI userMenu) {
+        this.itemPlacerService = itemPlacerService;
+        this.npcPlacerService =  npcPlacerService;
+        this.tileManager = tileManager;
         this.keyHandler = keyHandler;
-        player = new Player(this, keyHandler);
+        this.collisionChecker = collisionChecker;
+        this.soundService = soundService;
+        this.userMenu = userMenu;
+        player = new Player(this.collisionChecker, this.keyHandler, this.soundService, userMenu);
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
@@ -55,9 +62,9 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void setupGame() {
-        itemPlacer.setItem();
-        itemPlacer.setNpc();
-        playMusic(0);
+        itemPlacerService.setItem(this);
+        npcPlacerService.setNpc(collisionChecker, npcs);
+        soundService.playMusic(0);
         gameState = playState;
     }
 
@@ -86,10 +93,10 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update(Player player) {
         if (!keyHandler.paused) {
-            player.update();
+            player.update(items, npcs);
             for (int i = 0; i < npcs.length; i++) {
                 if(npcs[i] != null) {
-                    npcs[i].update();
+                    npcs[i].update(player, items);
                 }
             }
         }
@@ -98,7 +105,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         graphics2D = (Graphics2D) graphics;
-        tileManager.draw(graphics2D);
+        tileManager.draw(graphics2D, player);
         for(int i = 0; i < items.length; i++) {
             if(items[i] != null) {
                 items[i].draw(graphics2D, this);
@@ -106,31 +113,18 @@ public class GamePanel extends JPanel implements Runnable {
         }
         for(int i = 0; i < npcs.length; i++) {
             if(npcs[i] != null) {
-                npcs[i].draw(graphics2D);
+                npcs[i].draw(graphics2D, player);
             }
         }
         player.draw(graphics2D);
-        ui.draw(graphics2D);
+        userMenu.draw(graphics2D, player, gameThread);
         if (keyHandler.paused) {
-            ui.drawPauseScreen();
-            music.stop();
+            userMenu.drawPauseScreen();
+            soundService.stopMusic();
         }
         graphics2D.dispose();
     }
 
-    public void playMusic(int i) {
-        music.setFile(i);
-        music.play();
-        music.loop();
-    }
 
-    public void stopMusic() {
-        music.stop();
-    }
-
-    public void playSoundEffect(int i) {
-        soundEffect.setFile(i);
-        soundEffect.play();
-    }
 
 }

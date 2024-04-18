@@ -8,11 +8,9 @@ import javax.imageio.ImageIO;
 
 public class KeyItem extends Item {
 
-    GamePanel gamePanel;
 
-    public KeyItem(GamePanel gamePanel) {
+    public KeyItem() {
 
-        this.gamePanel = gamePanel;
         name = "key";
         try {
             image = ImageIO.read(getClass().getResourceAsStream("/graphics/objects/key_01.png"));
