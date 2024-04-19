@@ -5,7 +5,6 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class ScreenSettings {
 
-    //SCREEN SETTINGS:
     public static final int FPS = 60;
     public static final int ORIGINAL_TILE_SIZE = 16;
     public static final int SCALE = 3;

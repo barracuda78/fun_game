@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SoundServiceImpl {
 
-  private final Sound music; //prototype?
+  private final Sound music;
 
-  private final Sound soundEffect; //prototype?
+  private final Sound soundEffect;
 
   public void playMusic(int i) {
     music.setFile(i);

@@ -8,15 +8,18 @@ import com.barracuda.fun.gui.entity.Entity;
 import com.barracuda.fun.gui.entity.Player;
 import com.barracuda.fun.gui.item.Item;
 import com.barracuda.fun.gui.tile.TileManager;
+import jakarta.annotation.PostConstruct;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class GamePanel extends JPanel implements Runnable {
 
     // SYSTEM:
@@ -27,13 +30,13 @@ public class GamePanel extends JPanel implements Runnable {
     private final NpcPlacerServiceImpl npcPlacerService;
     private final SoundServiceImpl soundService;
     private final UI userMenu;
-
+    private final Player player ;
 
     public Thread gameThread;
     public Graphics2D graphics2D;
 
     // ENTITY AND OBJECT:
-    public Player player ;
+
     public Item[] items = new Item[99];
     public Entity[] npcs = new Entity[10];
 
@@ -43,16 +46,8 @@ public class GamePanel extends JPanel implements Runnable {
     public final int pauseState = 2;
     public final int dialogState = 3;
 
-
-    public GamePanel(KeyHandler keyHandler, ItemPlacerServiceImpl itemPlacerService, NpcPlacerServiceImpl npcPlacerService, TileManager tileManager, CollisionChecker collisionChecker, SoundServiceImpl soundService, UI userMenu) {
-        this.itemPlacerService = itemPlacerService;
-        this.npcPlacerService =  npcPlacerService;
-        this.tileManager = tileManager;
-        this.keyHandler = keyHandler;
-        this.collisionChecker = collisionChecker;
-        this.soundService = soundService;
-        this.userMenu = userMenu;
-        player = new Player(this.collisionChecker, this.keyHandler, this.soundService, userMenu);
+    @PostConstruct
+    public void init() {
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
@@ -108,7 +103,7 @@ public class GamePanel extends JPanel implements Runnable {
         tileManager.draw(graphics2D, player);
         for(int i = 0; i < items.length; i++) {
             if(items[i] != null) {
-                items[i].draw(graphics2D, this);
+                items[i].draw(graphics2D, player);
             }
         }
         for(int i = 0; i < npcs.length; i++) {
@@ -124,7 +119,5 @@ public class GamePanel extends JPanel implements Runnable {
         }
         graphics2D.dispose();
     }
-
-
 
 }
