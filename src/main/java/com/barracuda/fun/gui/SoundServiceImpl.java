@@ -1,12 +1,15 @@
 package com.barracuda.fun.gui;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SoundServiceImpl { //todo: check if it could be a singleton
+@RequiredArgsConstructor
+public class SoundServiceImpl {
 
-  Sound music = new Sound(); //prototype?
-  Sound soundEffect = new Sound(); //prototype?
+  private final Sound music; //prototype?
+
+  private final Sound soundEffect; //prototype?
 
   public void playMusic(int i) {
     music.setFile(i);
