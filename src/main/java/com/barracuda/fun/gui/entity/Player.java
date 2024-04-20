@@ -3,6 +3,8 @@ package com.barracuda.fun.gui.entity;
 import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_HEIGHT;
 import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_WIDTH;
 import static com.barracuda.fun.gui.constants.ScreenSettings.TILE_SIZE;
+import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_CENTER_X;
+import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_CENTER_Y;
 
 import com.barracuda.fun.gui.CollisionChecker;
 import com.barracuda.fun.gui.KeyHandler;
@@ -24,10 +26,6 @@ public class Player extends Entity {
 
     private final UI ui;
 
-    public final int screenX;
-
-    public final int screenY;
-
     public int keyAmount = 0;
 
     public int coinAmount = 0;
@@ -45,8 +43,6 @@ public class Player extends Entity {
         this.keyHandler = keyHandler;
         this.soundService = soundService;
         this.ui = ui;
-        screenX = SCREEN_WIDTH / 2 - (TILE_SIZE / 2);
-        screenY = SCREEN_HEIGHT / 2 - (TILE_SIZE / 2);
         solidArea = new Rectangle();
         solidArea.x = 8;
         solidArea.y = 16;
@@ -234,7 +230,7 @@ public class Player extends Entity {
                 }
                 break;
         }
-        graphics2D.drawImage(image, screenX, screenY, null);
+        graphics2D.drawImage(image, SCREEN_CENTER_X, SCREEN_CENTER_Y, null);
     }
 
 }

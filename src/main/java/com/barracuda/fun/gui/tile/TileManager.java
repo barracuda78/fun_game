@@ -1,10 +1,11 @@
 package com.barracuda.fun.gui.tile;
 
+import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_CENTER_X;
+import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_CENTER_Y;
 import static com.barracuda.fun.gui.constants.ScreenSettings.TILE_SIZE;
 import static com.barracuda.fun.gui.constants.WorldSettings.MAX_WORLD_COLUMN;
 import static com.barracuda.fun.gui.constants.WorldSettings.MAX_WORLD_ROW;
 
-import com.barracuda.fun.gui.GamePanel;
 import com.barracuda.fun.gui.ImageScalerServiceImpl;
 import com.barracuda.fun.gui.entity.Player;
 import java.awt.Graphics2D;
@@ -99,6 +100,7 @@ public class TileManager {
         }
     }
 
+    //TODO: do not pass a player here. You need only screenX and screenY to draw. So calculate them in a separate class and pass them here.
     public void draw(Graphics2D graphics2D, Player player) {
 
         int worldColumn = 0;
@@ -110,17 +112,17 @@ public class TileManager {
 
             int worldX = worldColumn * TILE_SIZE;
             int worldY = worldRow * TILE_SIZE;
-            int screenX = worldX - player.worldX + player.screenX;
-            int screenY = worldY - player.worldY + player.screenY;
+            int screenX = worldX - player.worldX + SCREEN_CENTER_X;
+            int screenY = worldY - player.worldY + SCREEN_CENTER_Y;
 
             if (
-                worldX + TILE_SIZE > player.worldX - player.screenX
+                worldX + TILE_SIZE > player.worldX - SCREEN_CENTER_X
                     &&
-                worldX  - TILE_SIZE < player.worldX + player.screenX
+                worldX  - TILE_SIZE < player.worldX + SCREEN_CENTER_X
                     &&
-                worldY  + TILE_SIZE > player.worldY - player.screenY
+                worldY  + TILE_SIZE > player.worldY - SCREEN_CENTER_Y
                     &&
-                worldY  - TILE_SIZE < player.worldY + player.screenY
+                worldY  - TILE_SIZE < player.worldY + SCREEN_CENTER_Y
             ) {
                 graphics2D.drawImage(tile[tileNum].image, screenX, screenY, TILE_SIZE, TILE_SIZE, null);
             }

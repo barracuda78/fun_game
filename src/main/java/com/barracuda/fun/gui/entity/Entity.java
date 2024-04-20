@@ -1,9 +1,10 @@
 package com.barracuda.fun.gui.entity;
 
+import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_CENTER_X;
+import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_CENTER_Y;
 import static com.barracuda.fun.gui.constants.ScreenSettings.TILE_SIZE;
 
 import com.barracuda.fun.gui.CollisionChecker;
-import com.barracuda.fun.gui.GamePanel;
 import com.barracuda.fun.gui.ImageScalerServiceImpl;
 import com.barracuda.fun.gui.item.Item;
 import java.awt.Graphics2D;
@@ -92,17 +93,17 @@ public class Entity {
 
     public void draw(Graphics2D graphics2D, Player player) {
         BufferedImage image = null;
-        int screenX = worldX - player.worldX + player.screenX;
-        int screenY = worldY - player.worldY + player.screenY;
+        int screenX = worldX - player.worldX + SCREEN_CENTER_X;
+        int screenY = worldY - player.worldY + SCREEN_CENTER_Y;
 
         if (
-            worldX + TILE_SIZE > player.worldX - player.screenX
+            worldX + TILE_SIZE > player.worldX - SCREEN_CENTER_X
                 &&
-                worldX  - TILE_SIZE < player.worldX + player.screenX
+                worldX  - TILE_SIZE < player.worldX + SCREEN_CENTER_X
                 &&
-                worldY  + TILE_SIZE > player.worldY - player.screenY
+                worldY  + TILE_SIZE > player.worldY - SCREEN_CENTER_Y
                 &&
-                worldY  - TILE_SIZE < player.worldY + player.screenY
+                worldY  - TILE_SIZE < player.worldY + SCREEN_CENTER_Y
         ) {
             switch (direction) {
                 case "up":
