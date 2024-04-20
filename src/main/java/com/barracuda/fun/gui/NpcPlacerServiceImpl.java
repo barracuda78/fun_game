@@ -11,8 +11,7 @@ public class NpcPlacerServiceImpl {
 
     public void setNpc(CollisionChecker collisionChecker, Entity[] npcs) {
         Entity dog = new DogNpc(collisionChecker);
-        dog.worldX = TILE_SIZE * 21;
-        dog.worldY = TILE_SIZE * 21;
+        dog.setCoordinates(TILE_SIZE * 21, TILE_SIZE * 21);
         npcs[0] = dog;
     }
 

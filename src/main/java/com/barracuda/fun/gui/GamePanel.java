@@ -14,6 +14,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import javax.swing.JPanel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -100,7 +101,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         graphics2D = (Graphics2D) graphics;
-        tileManager.draw(graphics2D, player);
+        tileManager.draw(graphics2D, player.getCoordinates());
         for(int i = 0; i < items.length; i++) {
             if(items[i] != null) {
                 items[i].draw(graphics2D, player);
@@ -108,7 +109,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
         for(int i = 0; i < npcs.length; i++) {
             if(npcs[i] != null) {
-                npcs[i].draw(graphics2D, player);
+                npcs[i].draw(graphics2D, player.getCoordinates());
             }
         }
         player.draw(graphics2D);

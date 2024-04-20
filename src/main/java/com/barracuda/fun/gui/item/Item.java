@@ -28,17 +28,17 @@ public abstract class Item {
     public int solidAreaDefaultY = 0;
 
     public void draw(Graphics2D graphics2D, Player player) {
-        int screenX = worldX - player.worldX + SCREEN_CENTER_X;
-        int screenY = worldY - player.worldY + SCREEN_CENTER_Y;
+        int screenX = worldX - player.getCoordinates().x + SCREEN_CENTER_X;
+        int screenY = worldY - player.getCoordinates().y + SCREEN_CENTER_Y;
 
         if (
-            worldX + TILE_SIZE > player.worldX - SCREEN_CENTER_X
+            worldX + TILE_SIZE > player.getCoordinates().x - SCREEN_CENTER_X
                 &&
-                worldX  - TILE_SIZE < player.worldX + SCREEN_CENTER_X
+                worldX  - TILE_SIZE < player.getCoordinates().x + SCREEN_CENTER_X
                 &&
-                worldY  + TILE_SIZE > player.worldY - SCREEN_CENTER_Y
+                worldY  + TILE_SIZE > player.getCoordinates().y - SCREEN_CENTER_Y
                 &&
-                worldY  - TILE_SIZE < player.worldY + SCREEN_CENTER_Y
+                worldY  - TILE_SIZE < player.getCoordinates().y + SCREEN_CENTER_Y
         ) {
             graphics2D.drawImage(image, screenX, screenY, TILE_SIZE, TILE_SIZE, null);
         }

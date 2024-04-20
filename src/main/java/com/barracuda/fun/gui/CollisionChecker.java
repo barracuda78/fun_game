@@ -18,10 +18,10 @@ public class CollisionChecker {
     }
 
     public void checkTile(Entity entity) {
-        int entityLeftWorldX = entity.worldX + entity.solidArea.x;
-        int entityRightWorldX = entity.worldX + entity.solidArea.x + entity.solidArea.width;
-        int entityTopWorldY = entity.worldY + entity.solidArea.y;
-        int entityBottomWorldY = entity.worldY + entity.solidArea.y + entity.solidArea.height;
+        int entityLeftWorldX = entity.getCoordinates().x + entity.solidArea.x;
+        int entityRightWorldX = entity.getCoordinates().x + entity.solidArea.x + entity.solidArea.width;
+        int entityTopWorldY = entity.getCoordinates().y + entity.solidArea.y;
+        int entityBottomWorldY = entity.getCoordinates().y + entity.solidArea.y + entity.solidArea.height;
 
         int entityLeftCol = entityLeftWorldX / TILE_SIZE;
         int entityRightCol = entityRightWorldX / TILE_SIZE;
@@ -77,8 +77,8 @@ public class CollisionChecker {
         for (int i = 0; i < items.length; i++) {
             if (items[i] != null) {
                 // Get entities solid area position
-                entity.solidArea.x = entity.worldX + entity.solidArea.x;
-                entity.solidArea.y = entity.worldY + entity.solidArea.y;
+                entity.solidArea.x = entity.getCoordinates().x + entity.solidArea.x;
+                entity.solidArea.y = entity.getCoordinates().y + entity.solidArea.y;
                 // Get item's solid area position
                 items[i].solidArea.x = items[i].worldX + items[i].solidArea.x;
                 items[i].solidArea.y = items[i].worldY + items[i].solidArea.y;
@@ -145,11 +145,11 @@ public class CollisionChecker {
         for (int i = 0; i < target.length; i++) {
             if (target[i] != null) {
                 // Get entities solid area position
-                entity.solidArea.x = entity.worldX + entity.solidArea.x;
-                entity.solidArea.y = entity.worldY + entity.solidArea.y;
+                entity.solidArea.x = entity.getCoordinates().x + entity.solidArea.x;
+                entity.solidArea.y = entity.getCoordinates().y + entity.solidArea.y;
                 // Get item's solid area position
-                target[i].solidArea.x = target[i].worldX + target[i].solidArea.x;
-                target[i].solidArea.y = target[i].worldY + target[i].solidArea.y;
+                target[i].solidArea.x = target[i].getCoordinates().x + target[i].solidArea.x;
+                target[i].solidArea.y = target[i].getCoordinates().y + target[i].solidArea.y;
 
                 switch (entity.direction) {
                     case "up":
@@ -193,11 +193,11 @@ public class CollisionChecker {
 
     public void checkPlayer(Entity entity, Player player) {
         // Get entities solid area position
-        entity.solidArea.x = entity.worldX + entity.solidArea.x;
-        entity.solidArea.y = entity.worldY + entity.solidArea.y;
+        entity.solidArea.x = entity.getCoordinates().x + entity.solidArea.x;
+        entity.solidArea.y = entity.getCoordinates().y + entity.solidArea.y;
         // Get item's solid area position
-        player.solidArea.x = player.worldX + player.solidArea.x;
-        player.solidArea.y = player.worldY + player.solidArea.y;
+        player.solidArea.x = player.getCoordinates().x + player.solidArea.x;
+        player.solidArea.y = player.getCoordinates().y + player.solidArea.y;
 
         switch (entity.direction) {
             case "up":

@@ -7,22 +7,29 @@ import static com.barracuda.fun.gui.constants.WorldSettings.MAX_WORLD_COLUMN;
 import static com.barracuda.fun.gui.constants.WorldSettings.MAX_WORLD_ROW;
 
 import com.barracuda.fun.gui.ImageScalerServiceImpl;
-import com.barracuda.fun.gui.entity.Player;
+import com.barracuda.fun.gui.util.CalculationServiceImpl;
+import jakarta.annotation.PostConstruct;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import javax.imageio.ImageIO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class TileManager {
+
+    private final CalculationServiceImpl calculationService;
 
     public Tile[] tile;
 
     public int[][] mapTile;
 
-    public TileManager() {
+    @PostConstruct
+    public void init() {
         tile = new Tile[99];
         mapTile = new int[MAX_WORLD_COLUMN][MAX_WORLD_ROW];
         getTileImage();
@@ -100,31 +107,26 @@ public class TileManager {
         }
     }
 
-    //TODO: do not pass a player here. You need only screenX and screenY to draw. So calculate them in a separate class and pass them here.
-    public void draw(Graphics2D graphics2D, Player player) {
+    public void draw(Graphics2D graphics2D, Point playerCoordinates) {
 
         int worldColumn = 0;
         int worldRow = 0;
 
-
         while (worldColumn < MAX_WORLD_COLUMN && worldRow < MAX_WORLD_ROW) {
             int tileNum = mapTile[worldColumn][worldRow];
 
-            int worldX = worldColumn * TILE_SIZE;
-            int worldY = worldRow * TILE_SIZE;
-            int screenX = worldX - player.worldX + SCREEN_CENTER_X;
-            int screenY = worldY - player.worldY + SCREEN_CENTER_Y;
+            final Point point = calculationService.calculateCoordinates(playerCoordinates, worldColumn, worldRow);
 
             if (
-                worldX + TILE_SIZE > player.worldX - SCREEN_CENTER_X
+                worldColumn * TILE_SIZE + TILE_SIZE > playerCoordinates.x - SCREEN_CENTER_X
                     &&
-                worldX  - TILE_SIZE < player.worldX + SCREEN_CENTER_X
+                worldColumn * TILE_SIZE  - TILE_SIZE < playerCoordinates.x + SCREEN_CENTER_X
                     &&
-                worldY  + TILE_SIZE > player.worldY - SCREEN_CENTER_Y
+                worldRow * TILE_SIZE  + TILE_SIZE > playerCoordinates.y - SCREEN_CENTER_Y
                     &&
-                worldY  - TILE_SIZE < player.worldY + SCREEN_CENTER_Y
+                worldRow * TILE_SIZE  - TILE_SIZE < playerCoordinates.y + SCREEN_CENTER_Y
             ) {
-                graphics2D.drawImage(tile[tileNum].image, screenX, screenY, TILE_SIZE, TILE_SIZE, null);
+                graphics2D.drawImage(tile[tileNum].image, point.x, point.y, TILE_SIZE, TILE_SIZE, null);
             }
             worldColumn++;
             if (worldColumn == MAX_WORLD_COLUMN) {

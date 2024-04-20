@@ -8,18 +8,22 @@ import com.barracuda.fun.gui.CollisionChecker;
 import com.barracuda.fun.gui.ImageScalerServiceImpl;
 import com.barracuda.fun.gui.item.Item;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Objects;
 import javax.imageio.ImageIO;
 
 public class Entity {
 
     final CollisionChecker collisionChecker;
 
-    public int worldX;
+//    public int worldX;
+//
+//    public int worldY;
 
-    public int worldY;
+    private final Point coordinates;
 
     public int speed;
 
@@ -50,6 +54,7 @@ public class Entity {
 
     public Entity(CollisionChecker collisionChecker) {
         this.collisionChecker = collisionChecker;
+        this.coordinates = new Point();
     }
 
     public void setAction() {
@@ -66,16 +71,16 @@ public class Entity {
         if (collisionOn == false) {
             switch (direction) {
                 case "up":
-                    worldY -= speed;
+                    coordinates.y -= speed;
                     break;
                 case "down":
-                    worldY += speed;
+                    coordinates.y += speed;
                     break;
                 case "left":
-                    worldX -= speed;
+                    coordinates.x -= speed;
                     break;
                 case "right":
-                    worldX += speed;
+                    coordinates.x += speed;
                     break;
             }
         }
@@ -91,19 +96,19 @@ public class Entity {
         }
     }
 
-    public void draw(Graphics2D graphics2D, Player player) {
+    public void draw(Graphics2D graphics2D, Point playerCoordinates) {
         BufferedImage image = null;
-        int screenX = worldX - player.worldX + SCREEN_CENTER_X;
-        int screenY = worldY - player.worldY + SCREEN_CENTER_Y;
+        int screenX = coordinates.x - playerCoordinates.x + SCREEN_CENTER_X;
+        int screenY = coordinates.y - playerCoordinates.y + SCREEN_CENTER_Y;
 
         if (
-            worldX + TILE_SIZE > player.worldX - SCREEN_CENTER_X
+            coordinates.x + TILE_SIZE > playerCoordinates.x - SCREEN_CENTER_X
                 &&
-                worldX  - TILE_SIZE < player.worldX + SCREEN_CENTER_X
+                coordinates.x  - TILE_SIZE < playerCoordinates.x + SCREEN_CENTER_X
                 &&
-                worldY  + TILE_SIZE > player.worldY - SCREEN_CENTER_Y
+                coordinates.y  + TILE_SIZE > playerCoordinates.x - SCREEN_CENTER_Y
                 &&
-                worldY  - TILE_SIZE < player.worldY + SCREEN_CENTER_Y
+                coordinates.y  - TILE_SIZE < playerCoordinates.x + SCREEN_CENTER_Y
         ) {
             switch (direction) {
                 case "up":
@@ -144,8 +149,8 @@ public class Entity {
         }
     }
 
-    public BufferedImage setup(String imagePath) {
-        ImageScalerServiceImpl tool = new ImageScalerServiceImpl();
+    public BufferedImage loadScaledImage(String imagePath) {
+        ImageScalerServiceImpl tool = new ImageScalerServiceImpl(); //TODO: it is a bean!
         BufferedImage scaledImage = null;
         try {
             scaledImage = ImageIO.read(getClass().getResourceAsStream( imagePath));
@@ -157,4 +162,12 @@ public class Entity {
         return scaledImage;
     }
 
+    public Point getCoordinates() {
+        return coordinates;
+    }
+
+    public void setCoordinates(int x, int y) {
+        this.coordinates.x = x;
+        this.coordinates.y = y;
+    }
 }

@@ -1,7 +1,6 @@
 package com.barracuda.fun.gui.entity;
 
 import com.barracuda.fun.gui.CollisionChecker;
-import com.barracuda.fun.gui.GamePanel;
 import java.util.Random;
 
 public class DogNpc extends Entity {
@@ -14,14 +13,14 @@ public class DogNpc extends Entity {
     }
 
     public void getImage() {
-        up_1 = setup("/graphics/npc/dog_up_01.png");
-        up_2 = setup("/graphics/npc/dog_up_02.png");
-        down_1 = setup("/graphics/npc/dog_down_01.png");
-        down_2 = setup("/graphics/npc/dog_down_02.png");
-        left_1 = setup("/graphics/npc/dog_up_01.png");
-        left_2 = setup("/graphics/npc/dog_up_02.png");
-        right_1 = setup("/graphics/npc/dog_down_01.png");
-        right_2 = setup("/graphics/npc/dog_down_02.png");
+        up_1 = loadScaledImage("/graphics/npc/dog_up_01.png");
+        up_2 = loadScaledImage("/graphics/npc/dog_up_02.png");
+        down_1 = loadScaledImage("/graphics/npc/dog_down_01.png");
+        down_2 = loadScaledImage("/graphics/npc/dog_down_02.png");
+        left_1 = loadScaledImage("/graphics/npc/dog_up_01.png");
+        left_2 = loadScaledImage("/graphics/npc/dog_up_02.png");
+        right_1 = loadScaledImage("/graphics/npc/dog_down_01.png");
+        right_2 = loadScaledImage("/graphics/npc/dog_down_02.png");
     }
 
     //AI method of characters behavior:

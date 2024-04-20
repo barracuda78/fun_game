@@ -1,7 +1,5 @@
 package com.barracuda.fun.gui.entity;
 
-import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_HEIGHT;
-import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_WIDTH;
 import static com.barracuda.fun.gui.constants.ScreenSettings.TILE_SIZE;
 import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_CENTER_X;
 import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_CENTER_Y;
@@ -11,6 +9,7 @@ import com.barracuda.fun.gui.KeyHandler;
 import com.barracuda.fun.gui.SoundServiceImpl;
 import com.barracuda.fun.gui.UI;
 import com.barracuda.fun.gui.item.Item;
+import jakarta.annotation.PostConstruct;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -38,11 +37,15 @@ public class Player extends Entity {
 
     public boolean bootsOn = false;
 
-    public Player (CollisionChecker collisionChecker, KeyHandler keyHandler, SoundServiceImpl soundService, UI ui) { //should it depend on GamePanel and KeyHandler?
+    public Player (CollisionChecker collisionChecker, KeyHandler keyHandler, SoundServiceImpl soundService, UI ui) { //TODO: should it depend on and KeyHandler?
         super(collisionChecker);
         this.keyHandler = keyHandler;
         this.soundService = soundService;
         this.ui = ui;
+    }
+
+    @PostConstruct
+    public void init() {
         solidArea = new Rectangle();
         solidArea.x = 8;
         solidArea.y = 16;
@@ -51,25 +54,24 @@ public class Player extends Entity {
         solidArea.height = 32;
         solidArea.width = 32;
         setDefaultValues();
-        getPlayerImage();
+        setCoordinates(TILE_SIZE * 23, TILE_SIZE * 21);
+        loadPlayerImage();
     }
 
     public void setDefaultValues() { //do not hardcode. Try to set from properties file? @PostConstruct?
-        worldX = TILE_SIZE * 23; //players position on the world map
-        worldY = TILE_SIZE * 21; //players position on the world map
         speed = 4;
         direction = "down";
     }
 
-    public void getPlayerImage() {
-        up_1 = setup("/graphics/player/white_cat_up_1.png");
-        up_2 = setup("/graphics/player/white_cat_up_2.png");
-        down_1 = setup("/graphics/player/white_cat_down_1.png");
-        down_2 = setup("/graphics/player/white_cat_down_2.png");
-        left_1 = setup("/graphics/player/white_cat_left_1.png");
-        left_2 = setup("/graphics/player/white_cat_left_2.png");
-        right_1 = setup("/graphics/player/white_cat_right_1.png");
-        right_2 = setup("/graphics/player/white_cat_right_2.png");
+    public void loadPlayerImage() {
+        up_1 = loadScaledImage("/graphics/player/white_cat_up_1.png");
+        up_2 = loadScaledImage("/graphics/player/white_cat_up_2.png");
+        down_1 = loadScaledImage("/graphics/player/white_cat_down_1.png");
+        down_2 = loadScaledImage("/graphics/player/white_cat_down_2.png");
+        left_1 = loadScaledImage("/graphics/player/white_cat_left_1.png");
+        left_2 = loadScaledImage("/graphics/player/white_cat_left_2.png");
+        right_1 = loadScaledImage("/graphics/player/white_cat_right_1.png");
+        right_2 = loadScaledImage("/graphics/player/white_cat_right_2.png");
     }
 
     public void update(Item[] items, Entity[] npcs) { //gets called 60 times per second.
@@ -103,16 +105,16 @@ public class Player extends Entity {
             if (!collisionOn) {
                 switch (direction) {
                     case "up":
-                        worldY -= speed;
+                        getCoordinates().y -= speed;
                         break;
                     case "down":
-                        worldY += speed;
+                        getCoordinates().y += speed;
                         break;
                     case "left":
-                        worldX -= speed;
+                        getCoordinates().x -= speed;
                         break;
                     case "right":
-                        worldX += speed;
+                        getCoordinates().x += speed;
                         break;
                 }
             }
