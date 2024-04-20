@@ -2,10 +2,14 @@ package com.barracuda.fun.gui;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class KeyHandler implements KeyListener {
+
+    private final SoundServiceImpl soundService;
 
     public boolean upPressed;
 
@@ -16,6 +20,8 @@ public class KeyHandler implements KeyListener {
     public boolean rightPressed;
 
     public boolean paused = false;
+
+    public boolean musicOn = true;
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -43,6 +49,16 @@ public class KeyHandler implements KeyListener {
             }
             else if (!paused) {
                 paused = true;
+            }
+        }
+        if (code == KeyEvent.VK_O) {
+            if (musicOn) {
+                musicOn = false;
+                soundService.stopMusic();
+            }
+            else if (!musicOn) {
+                musicOn = true;
+                soundService.playMusic(0);
             }
         }
     }

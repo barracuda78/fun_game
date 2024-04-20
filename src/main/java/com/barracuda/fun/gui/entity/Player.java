@@ -8,12 +8,15 @@ import com.barracuda.fun.gui.CollisionChecker;
 import com.barracuda.fun.gui.KeyHandler;
 import com.barracuda.fun.gui.SoundServiceImpl;
 import com.barracuda.fun.gui.UI;
+import com.barracuda.fun.gui.entity.draw_handler.DrawEntityDirectionHandlerRegistry;
 import com.barracuda.fun.gui.item.Item;
 import jakarta.annotation.PostConstruct;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -37,8 +40,8 @@ public class Player extends Entity {
 
     public boolean bootsOn = false;
 
-    public Player (CollisionChecker collisionChecker, KeyHandler keyHandler, SoundServiceImpl soundService, UI ui) { //TODO: should it depend on and KeyHandler?
-        super(collisionChecker);
+    public Player (CollisionChecker collisionChecker, KeyHandler keyHandler, SoundServiceImpl soundService, UI ui, DrawEntityDirectionHandlerRegistry drawEntityDirectionHandlerRegistry) { //TODO: should it depend on and KeyHandler?
+        super(collisionChecker, drawEntityDirectionHandlerRegistry);
         this.keyHandler = keyHandler;
         this.soundService = soundService;
         this.ui = ui;
@@ -72,6 +75,14 @@ public class Player extends Entity {
         left_2 = loadScaledImage("/graphics/player/white_cat_left_2.png");
         right_1 = loadScaledImage("/graphics/player/white_cat_right_1.png");
         right_2 = loadScaledImage("/graphics/player/white_cat_right_2.png");
+        images.add(up_1);
+        images.add(up_2);
+        images.add(down_1);
+        images.add(down_2);
+        images.add(left_1);
+        images.add(left_2);
+        images.add(right_1);
+        images.add(right_2);
     }
 
     public void update(Item[] items, Entity[] npcs) { //gets called 60 times per second.

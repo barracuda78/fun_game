@@ -6,17 +6,22 @@ import static com.barracuda.fun.gui.constants.ScreenSettings.TILE_SIZE;
 
 import com.barracuda.fun.gui.CollisionChecker;
 import com.barracuda.fun.gui.ImageScalerServiceImpl;
+import com.barracuda.fun.gui.entity.draw_handler.DrawEntityDirectionHandler;
+import com.barracuda.fun.gui.entity.draw_handler.DrawEntityDirectionHandlerRegistry;
 import com.barracuda.fun.gui.item.Item;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import javax.imageio.ImageIO;
 
 public class Entity {
 
+    private final DrawEntityDirectionHandlerRegistry drawEntityDirectionHandlerRegistry;
     final CollisionChecker collisionChecker;
 
 //    public int worldX;
@@ -27,7 +32,7 @@ public class Entity {
 
     public int speed;
 
-    public BufferedImage up_1;
+    public BufferedImage up_1; //TODO: avoid using them. use list instead
     public BufferedImage up_2;
     public BufferedImage down_1;
     public BufferedImage down_2;
@@ -35,6 +40,9 @@ public class Entity {
     public BufferedImage left_2;
     public BufferedImage right_1;
     public BufferedImage right_2;
+
+    public List<BufferedImage> images = new ArrayList<>();
+
 
     public String direction;
 
@@ -52,8 +60,9 @@ public class Entity {
 
     public int actionLockCounter = 0;
 
-    public Entity(CollisionChecker collisionChecker) {
+    public Entity(CollisionChecker collisionChecker, DrawEntityDirectionHandlerRegistry drawEntityDirectionHandlerRegistry) {
         this.collisionChecker = collisionChecker;
+        this.drawEntityDirectionHandlerRegistry = drawEntityDirectionHandlerRegistry;
         this.coordinates = new Point();
     }
 
@@ -97,7 +106,6 @@ public class Entity {
     }
 
     public void draw(Graphics2D graphics2D, Point playerCoordinates) {
-        BufferedImage image = null;
         int screenX = coordinates.x - playerCoordinates.x + SCREEN_CENTER_X;
         int screenY = coordinates.y - playerCoordinates.y + SCREEN_CENTER_Y;
 
@@ -110,41 +118,42 @@ public class Entity {
                 &&
                 coordinates.y  - TILE_SIZE < playerCoordinates.x + SCREEN_CENTER_Y
         ) {
-            switch (direction) {
-                case "up":
-                    if (spriteNumber == 1) {
-                        image = up_1;
-                    }
-                    if (spriteNumber == 2) {
-                        image = up_2;
-                    }
-                    break;
-                case "down":
-                    if (spriteNumber == 1) {
-                        image = down_1;
-                    }
-                    if (spriteNumber == 2) {
-                        image = down_2;
-                    }
-                    break;
-                case "left":
-                    if (spriteNumber == 1) {
-                        image = left_1;
-                    }
-                    if (spriteNumber == 2) {
-                        image = left_2;
-                    }
-                    break;
-                case "right":
-                    if (spriteNumber == 1) {
-                        image = right_1;
-                    }
-                    if (spriteNumber == 2) {
-                        image = right_2;
-                    }
-                    break;
-            }
-
+            final DrawEntityDirectionHandler handler = drawEntityDirectionHandlerRegistry.getHandler(direction);
+            BufferedImage image = handler.handle(spriteNumber, images);
+//            switch (direction) {
+//                case "up":
+//                    if (spriteNumber == 1) {
+//                        image = up_1;
+//                    }
+//                    if (spriteNumber == 2) {
+//                        image = up_2;
+//                    }
+//                    break;
+//                case "down":
+//                    if (spriteNumber == 1) {
+//                        image = down_1;
+//                    }
+//                    if (spriteNumber == 2) {
+//                        image = down_2;
+//                    }
+//                    break;
+//                case "left":
+//                    if (spriteNumber == 1) {
+//                        image = left_1;
+//                    }
+//                    if (spriteNumber == 2) {
+//                        image = left_2;
+//                    }
+//                    break;
+//                case "right":
+//                    if (spriteNumber == 1) {
+//                        image = right_1;
+//                    }
+//                    if (spriteNumber == 2) {
+//                        image = right_2;
+//                    }
+//                    break;
+//            }
             graphics2D.drawImage(image, screenX, screenY, TILE_SIZE, TILE_SIZE, null);
         }
     }

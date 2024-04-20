@@ -1,68 +1,28 @@
 package com.barracuda.fun.gui;
 
 import static com.barracuda.fun.gui.constants.ScreenSettings.FPS;
-import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_HEIGHT;
-import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_WIDTH;
 
-import com.barracuda.fun.gui.entity.Entity;
 import com.barracuda.fun.gui.entity.Player;
-import com.barracuda.fun.gui.item.Item;
-import com.barracuda.fun.gui.tile.TileManager;
-import jakarta.annotation.PostConstruct;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import javax.swing.JPanel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class GamePanel extends JPanel implements Runnable {
+public class GamePanel implements Runnable {
 
-    // SYSTEM:
-    private final TileManager tileManager;
     private final KeyHandler keyHandler;
-    private final CollisionChecker collisionChecker;
     private final ItemPlacerServiceImpl itemPlacerService;
     private final NpcPlacerServiceImpl npcPlacerService;
-    private final SoundServiceImpl soundService;
-    private final UI userMenu;
     private final Player player ;
+    private final DrawServiceImpl drawService;
 
     public Thread gameThread;
-    public Graphics2D graphics2D;
-
-    // ENTITY AND OBJECT:
-
-    public Item[] items = new Item[99];
-    public Entity[] npcs = new Entity[10];
 
     // GAME STATE:
-    public int gameState;
     public final int playState = 1;
     public final int pauseState = 2;
     public final int dialogState = 3;
-
-    @PostConstruct
-    public void init() {
-        this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
-        this.setBackground(Color.black);
-        this.setDoubleBuffered(true);
-        this.setLayout(new BorderLayout());
-        this.addKeyListener(keyHandler);
-        this.setFocusable(true);
-    }
-
-    public void setupGame() {
-        itemPlacerService.setItem(this);
-        npcPlacerService.setNpc(collisionChecker, npcs);
-        soundService.playMusic(0);
-        gameState = playState;
-    }
+    public int gameState = playState;
 
     public void startGameThread() {
         gameThread = new Thread(this);
@@ -71,7 +31,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
-        double drawInterval = 1_000_000_000/ FPS;
+        double drawInterval = 1_000_000_000 / FPS;
         double delta = 0.0;
         long lastTime = System.nanoTime();
         long currentTime;
@@ -81,7 +41,7 @@ public class GamePanel extends JPanel implements Runnable {
             lastTime = currentTime;
             if (delta >= 1) {
                 update(player);
-                repaint(); //here we call paintComponent(Graphics graphics) method
+                drawService.paint(); //here we call paintComponent(Graphics graphics) method
                 delta--;
             }
         }
@@ -89,36 +49,13 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update(Player player) {
         if (!keyHandler.paused) {
-            player.update(items, npcs);
-            for (int i = 0; i < npcs.length; i++) {
-                if(npcs[i] != null) {
-                    npcs[i].update(player, items);
+            player.update(itemPlacerService.getItems(), npcPlacerService.getNpcs());
+            for (int i = 0; i < npcPlacerService.getNpcs().length; i++) {
+                if(npcPlacerService.getNpcs()[i] != null) {
+                    npcPlacerService.getNpcs()[i].update(player, itemPlacerService.getItems());
                 }
             }
         }
-    }
-
-    public void paintComponent(Graphics graphics) {
-        super.paintComponent(graphics);
-        graphics2D = (Graphics2D) graphics;
-        tileManager.draw(graphics2D, player.getCoordinates());
-        for(int i = 0; i < items.length; i++) {
-            if(items[i] != null) {
-                items[i].draw(graphics2D, player);
-            }
-        }
-        for(int i = 0; i < npcs.length; i++) {
-            if(npcs[i] != null) {
-                npcs[i].draw(graphics2D, player.getCoordinates());
-            }
-        }
-        player.draw(graphics2D);
-        userMenu.draw(graphics2D, player, gameThread);
-        if (keyHandler.paused) {
-            userMenu.drawPauseScreen();
-            soundService.stopMusic();
-        }
-        graphics2D.dispose();
     }
 
 }
