@@ -14,39 +14,21 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import javax.imageio.ImageIO;
 
 public class Entity {
 
     private final DrawEntityDirectionHandlerRegistry drawEntityDirectionHandlerRegistry;
     final CollisionChecker collisionChecker;
-
-//    public int worldX;
-//
-//    public int worldY;
-
     private final Point coordinates;
-
     public int speed;
 
-    public BufferedImage up_1; //TODO: avoid using them. use list instead
-    public BufferedImage up_2;
-    public BufferedImage down_1;
-    public BufferedImage down_2;
-    public BufferedImage left_1;
-    public BufferedImage left_2;
-    public BufferedImage right_1;
-    public BufferedImage right_2;
-
-    public List<BufferedImage> images = new ArrayList<>();
+    protected final Sprites sprites;
 
 
     public String direction;
 
-    public int spriteCounter = 0;
+    public int spriteCounter = 0; //todo: move it to Sprites class with its methods?
 
     public int spriteNumber = 1;
 
@@ -60,10 +42,11 @@ public class Entity {
 
     public int actionLockCounter = 0;
 
-    public Entity(CollisionChecker collisionChecker, DrawEntityDirectionHandlerRegistry drawEntityDirectionHandlerRegistry) {
+    public Entity(CollisionChecker collisionChecker, DrawEntityDirectionHandlerRegistry drawEntityDirectionHandlerRegistry, Sprites sprites) {
         this.collisionChecker = collisionChecker;
         this.drawEntityDirectionHandlerRegistry = drawEntityDirectionHandlerRegistry;
         this.coordinates = new Point();
+        this.sprites = sprites;
     }
 
     public void setAction() {
@@ -119,41 +102,7 @@ public class Entity {
                 coordinates.y  - TILE_SIZE < playerCoordinates.x + SCREEN_CENTER_Y
         ) {
             final DrawEntityDirectionHandler handler = drawEntityDirectionHandlerRegistry.getHandler(direction);
-            BufferedImage image = handler.handle(spriteNumber, images);
-//            switch (direction) {
-//                case "up":
-//                    if (spriteNumber == 1) {
-//                        image = up_1;
-//                    }
-//                    if (spriteNumber == 2) {
-//                        image = up_2;
-//                    }
-//                    break;
-//                case "down":
-//                    if (spriteNumber == 1) {
-//                        image = down_1;
-//                    }
-//                    if (spriteNumber == 2) {
-//                        image = down_2;
-//                    }
-//                    break;
-//                case "left":
-//                    if (spriteNumber == 1) {
-//                        image = left_1;
-//                    }
-//                    if (spriteNumber == 2) {
-//                        image = left_2;
-//                    }
-//                    break;
-//                case "right":
-//                    if (spriteNumber == 1) {
-//                        image = right_1;
-//                    }
-//                    if (spriteNumber == 2) {
-//                        image = right_2;
-//                    }
-//                    break;
-//            }
+            final BufferedImage image = handler.handle(spriteNumber, sprites.getImages());
             graphics2D.drawImage(image, screenX, screenY, TILE_SIZE, TILE_SIZE, null);
         }
     }

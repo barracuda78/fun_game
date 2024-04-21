@@ -4,6 +4,7 @@ import static com.barracuda.fun.gui.constants.ScreenSettings.TILE_SIZE;
 import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_CENTER_X;
 import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_CENTER_Y;
 
+import com.barracuda.fun.enums.MovementDirection;
 import com.barracuda.fun.gui.CollisionChecker;
 import com.barracuda.fun.gui.KeyHandler;
 import com.barracuda.fun.gui.SoundServiceImpl;
@@ -15,12 +16,10 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Player extends Entity {
+public class Player extends Entity { //TODO: should not inherit from Entity!
 
     private final KeyHandler keyHandler;
 
@@ -40,8 +39,8 @@ public class Player extends Entity {
 
     public boolean bootsOn = false;
 
-    public Player (CollisionChecker collisionChecker, KeyHandler keyHandler, SoundServiceImpl soundService, UI ui, DrawEntityDirectionHandlerRegistry drawEntityDirectionHandlerRegistry) { //TODO: should it depend on and KeyHandler?
-        super(collisionChecker, drawEntityDirectionHandlerRegistry);
+    public Player (CollisionChecker collisionChecker, KeyHandler keyHandler, SoundServiceImpl soundService, UI ui, DrawEntityDirectionHandlerRegistry drawEntityDirectionHandlerRegistry, Sprites sprites) { //TODO: should it depend on and KeyHandler?
+        super(collisionChecker, drawEntityDirectionHandlerRegistry, sprites);
         this.keyHandler = keyHandler;
         this.soundService = soundService;
         this.ui = ui;
@@ -67,22 +66,22 @@ public class Player extends Entity {
     }
 
     public void loadPlayerImage() {
-        up_1 = loadScaledImage("/graphics/player/white_cat_up_1.png");
-        up_2 = loadScaledImage("/graphics/player/white_cat_up_2.png");
-        down_1 = loadScaledImage("/graphics/player/white_cat_down_1.png");
-        down_2 = loadScaledImage("/graphics/player/white_cat_down_2.png");
-        left_1 = loadScaledImage("/graphics/player/white_cat_left_1.png");
-        left_2 = loadScaledImage("/graphics/player/white_cat_left_2.png");
-        right_1 = loadScaledImage("/graphics/player/white_cat_right_1.png");
-        right_2 = loadScaledImage("/graphics/player/white_cat_right_2.png");
-        images.add(up_1);
-        images.add(up_2);
-        images.add(down_1);
-        images.add(down_2);
-        images.add(left_1);
-        images.add(left_2);
-        images.add(right_1);
-        images.add(right_2);
+        BufferedImage up_1 = loadScaledImage("/graphics/player/white_cat_up_1.png");
+        BufferedImage up_2 = loadScaledImage("/graphics/player/white_cat_up_2.png");
+        BufferedImage down_1 = loadScaledImage("/graphics/player/white_cat_down_1.png");
+        BufferedImage down_2 = loadScaledImage("/graphics/player/white_cat_down_2.png");
+        BufferedImage left_1 = loadScaledImage("/graphics/player/white_cat_left_1.png");
+        BufferedImage left_2 = loadScaledImage("/graphics/player/white_cat_left_2.png");
+        BufferedImage right_1 = loadScaledImage("/graphics/player/white_cat_right_1.png");
+        BufferedImage right_2 = loadScaledImage("/graphics/player/white_cat_right_2.png");
+        sprites.addSprite(up_1, MovementDirection.UP, 1);
+        sprites.addSprite(up_2, MovementDirection.UP, 2);
+        sprites.addSprite(down_1, MovementDirection.DOWN, 1);
+        sprites.addSprite(down_2, MovementDirection.DOWN, 2);
+        sprites.addSprite(left_1, MovementDirection.LEFT, 1);
+        sprites.addSprite(left_2, MovementDirection.LEFT, 2);
+        sprites.addSprite(right_1, MovementDirection.RIGHT, 1);
+        sprites.addSprite(right_2, MovementDirection.RIGHT, 2);
     }
 
     public void update(Item[] items, Entity[] npcs) { //gets called 60 times per second.
@@ -212,34 +211,34 @@ public class Player extends Entity {
         switch (direction) {
             case "up":
                 if (spriteNumber == 1) {
-                    image = up_1;
+                    image = sprites.getUpOneSprite();
                 }
                 if (spriteNumber == 2) {
-                    image = up_2;
+                    image = sprites.getUpTwoSprite();
                 }
                 break;
             case "down":
                 if (spriteNumber == 1) {
-                    image = down_1;
+                    image = sprites.getDownOneSprite();
                 }
                 if (spriteNumber == 2) {
-                    image = down_2;
+                    image = sprites.getDownTwoSprite();
                 }
                 break;
             case "left":
                 if (spriteNumber == 1) {
-                    image = left_1;
+                    image = sprites.getLeftOneSprite();
                 }
                 if (spriteNumber == 2) {
-                    image = left_2;
+                    image = sprites.getLeftTwoSprite();
                 }
                 break;
             case "right":
                 if (spriteNumber == 1) {
-                    image = right_1;
+                    image = sprites.getRightOneSprite();
                 }
                 if (spriteNumber == 2) {
-                    image = right_2;
+                    image = sprites.getRightTwoSprite();
                 }
                 break;
         }
