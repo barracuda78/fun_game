@@ -16,6 +16,8 @@ import com.barracuda.fun.service.data.SampleDto;
 import com.barracuda.fun.service.data.ParamsDto;
 import com.barracuda.fun.service.data.SampleVesselDto;
 import com.barracuda.fun.service.xlsx.processors.TableHeaderProcessor;
+import com.barracuda.fun.service.xlsx.resolver.ColumnWidthResolver;
+import com.barracuda.fun.service.xlsx.resolver.ColumnWidthResolverRegistry;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -47,6 +49,10 @@ public class ExcelWriterImpl {
     public static final String NEW_LINE_DELIMITER = "\n";
     public static final String CENTER_HORIZONTAL_ALIGNMENT = "center";
     public static int CELL_ADDITIONAL_WIDTH = 6;
+
+    private final ColumnWidthResolverRegistry columnWidthResolverRegistry;
+
+    private final LocalDateFormatter formatter;
 
     private final TableHeaderProcessor tableHeaderProcessor;
 
@@ -93,26 +99,8 @@ public class ExcelWriterImpl {
     }
 
     private int defineSearchResultTableColumnWidth(SearchResultColumnHeaderName e, List<SampleDto> sampleDtoList) {
-        return switch (e) {
-            case SAMPLE_NAME -> {int maxValueLength = sampleDtoList.stream()
-                .map(s -> s.getName().length())
-                .reduce(0, (l,r) -> l > r ? l : r);
-                yield maxValueLength > e.getLength() ? maxValueLength + CELL_ADDITIONAL_WIDTH : e.getLength() + CELL_ADDITIONAL_WIDTH;
-            }
-            case SOURCE_PROCESS -> {int maxValueLength = sampleDtoList.stream()
-                .map(s -> s.getProcess().getName().length())//TODO: NPE on getName
-                .reduce(0, (l,r) -> l > r ? l : r);
-                yield maxValueLength > e.getLength() ? maxValueLength + CELL_ADDITIONAL_WIDTH : e.getLength() + CELL_ADDITIONAL_WIDTH;
-            }
-            case ISN -> 35; //TODO: implement chain-of-responsibility
-            case LATIN_NAME -> 35;
-            case PROJECT_CODES -> 35;
-            case PHYSICAL_FORM -> 35;
-            case PRODUCTION_DATE -> 35;
-            case VESSEL -> 35;
-            case LINKED_CONCEPTS -> 35;
-
-        };
+        ColumnWidthResolver resolver = columnWidthResolverRegistry.getResolver(e);
+        return resolver.resolve(e, sampleDtoList);
     }
 
     public void fillSearchResultTableHeader(Worksheet worksheet_1) {
@@ -122,6 +110,12 @@ public class ExcelWriterImpl {
     }
 
     public  void createSearchResultTableContent(Worksheet worksheet_1, List<SampleDto> sampleDtoList) {
+        //TODO: style -> to separate logic!
+        //TODO: align vertically!
+        worksheet_1.range(1, 0, sampleDtoList.size(), SearchResultColumnHeaderName.values().length)
+            .style()
+            .wrapText(true)
+            .set();
         for (int i = 0; i < sampleDtoList.size(); i++) {
             writeSingleRow(worksheet_1, sampleDtoList.get(i), 1 + i);
         }
@@ -144,7 +138,7 @@ public class ExcelWriterImpl {
         worksheet_1.value(rowNumber, PHYSICAL_FORM.getColumnNumber(), Objects.isNull(sampleDto.getPhysicalForm())
             ? ""
             : sampleDto.getPhysicalForm().getValue());
-        worksheet_1.value(rowNumber, PRODUCTION_DATE.getColumnNumber(), sampleDto.getProductionDate()); //TODO: format date!
+        worksheet_1.value(rowNumber, PRODUCTION_DATE.getColumnNumber(), formatter.format(sampleDto.getProductionDate()));
         worksheet_1.value(rowNumber, VESSEL.getColumnNumber(), Objects.isNull(sampleDto.getVessels())
             ? ""
             : sampleDto.getVessels().stream()
