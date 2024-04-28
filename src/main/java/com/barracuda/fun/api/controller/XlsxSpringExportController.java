@@ -24,7 +24,11 @@ public class XlsxSpringExportController {
     public ResponseEntity<Resource> exportToXls() {
         List<SampleDto> sampleDtoList = List.of(
             SampleFactory.createSomeDTOBuilder(1).build(),
-            SampleFactory.createSomeDTOBuilder(2).build()
+            SampleFactory.createSomeDTOBuilder(2).build(),
+            SampleFactory.createSomeDTOBuilder(3)
+                .name("this is a very very long name for the sample 3")
+                .build(),
+            SampleFactory.createSomeDTOBuilder(4).build()
         );
 
         ParamsDto paramsDto = SampleFactory.createParams().build();

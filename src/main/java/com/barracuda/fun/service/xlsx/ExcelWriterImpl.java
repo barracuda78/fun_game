@@ -1,15 +1,21 @@
 package com.barracuda.fun.service.xlsx;
 
+import static com.barracuda.fun.service.xlsx.file.FilenameGeneratorImpl.EXTENSION;
+
 import com.barracuda.fun.service.data.SampleDto;
 import com.barracuda.fun.service.data.ParamsDto;
 import com.barracuda.fun.service.xlsx.exception.ExcelTemporaryFileWriterException;
+import com.barracuda.fun.service.xlsx.file.FilenameGenerator;
 import com.barracuda.fun.service.xlsx.processors.SearchParametersWorksheetProcessor;
 import com.barracuda.fun.service.xlsx.processors.SearchResultsWorksheetProcessor;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import lombok.RequiredArgsConstructor;
 import org.dhatim.fastexcel.Workbook;
 import org.springframework.stereotype.Service;
@@ -31,27 +37,39 @@ public class ExcelWriterImpl {
 
     private final SearchParametersWorksheetProcessor searchParametersWorksheetProcessor;
 
+    private final FilenameGenerator fileNameGenerator;
+
     //TODO: here use sampleDTOList to write it into xslx file
 
     //TODO: Default file name is ‘Lumos_SearchResults_<date-time>.xlsx’
 
     //TODO: use temporary file
-    public void write(String fileLocation, List<SampleDto> sampleDtoList, ParamsDto params) {
+    public void write(Path tempFilePath, List<SampleDto> sampleDtoList, ParamsDto params) {
         //TODO: if sampleDTOList is empty -> return WorkBook with two WorkSheets.
-
-        //TODO: use Multithreaded generation for both sheets;
-
+//        byte[] fileContent = null;
+//        Path tempFilePath = null;
+//        try {
+//            tempFilePath = Files.createTempFile(fileNameGenerator.generateWithoutExtension(), EXTENSION);
+//        } catch (IOException e) {
+//            throw new ExcelTemporaryFileWriterException(
+//                "Can not create temporary file in the specified location");
+//        }
         try (
-            OutputStream os = Files.newOutputStream(Paths.get(fileLocation));
-            Workbook workbook = new Workbook(os, "MyApplication", "1.0"))
+            OutputStream os = Files.newOutputStream(tempFilePath); //, StandardOpenOption.DELETE_ON_CLOSE
+            Workbook workbook = new Workbook(os, "Lumos", "1.0")) //TODO: check these arguments
         {
-            searchResultsWorksheetProcessor.process(workbook, sampleDtoList);
-            searchParametersWorksheetProcessor.process(workbook, params);
-        }
-        catch (IOException e) {
+            CompletableFuture<Void> searchResultFuture = CompletableFuture.runAsync(() ->
+                searchResultsWorksheetProcessor.process(workbook, sampleDtoList));
+            CompletableFuture<Void> searchParamFuture = CompletableFuture.runAsync(() ->
+                searchParametersWorksheetProcessor.process(workbook, params));
+            CompletableFuture.allOf(searchResultFuture, searchParamFuture).get();
+//            fileContent = Files.readAllBytes(tempFilePath);
+        } catch (IOException | InterruptedException | ExecutionException e) {
             throw new ExcelTemporaryFileWriterException(
-                "Can not write temporary excel file to the specified location: " + fileLocation);
+                "Can not write temporary excel file to the specified location: " + tempFilePath);
         }
+
+//        return fileContent;
     }
 
 }

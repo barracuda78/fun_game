@@ -16,7 +16,7 @@ import static com.barracuda.fun.service.xlsx.SearchResultColumnHeaderName.VESSEL
 import com.barracuda.fun.service.data.DictionaryValueDto;
 import com.barracuda.fun.service.data.SampleDto;
 import com.barracuda.fun.service.data.SampleVesselDto;
-import com.barracuda.fun.service.xlsx.LocalDateFormatter;
+import com.barracuda.fun.service.xlsx.DateTimeFormatter;
 import com.barracuda.fun.service.xlsx.SearchResultColumnHeaderName;
 import com.barracuda.fun.service.xlsx.resolver.column_width_resolver.ColumnWidthResolver;
 import com.barracuda.fun.service.xlsx.resolver.column_width_resolver.ColumnWidthResolverRegistry;
@@ -42,7 +42,7 @@ public class SearchResultsWorksheetProcessorImpl implements SearchResultsWorkshe
 
     private final HyperLinkResolverRegistry hyperLinkResolverRegistry;
 
-    private final LocalDateFormatter formatter;
+    private final DateTimeFormatter formatter;
 
     @Override
     public void process(@NonNull Workbook workbook, @NonNull List<SampleDto> sampleDtoList) {
@@ -118,7 +118,7 @@ public class SearchResultsWorksheetProcessorImpl implements SearchResultsWorkshe
         worksheet_1.value(rowNumber, PHYSICAL_FORM.getColumnNumber(), Objects.isNull(sampleDto.getPhysicalForm())
             ? ""
             : sampleDto.getPhysicalForm().getValue());
-        worksheet_1.value(rowNumber, PRODUCTION_DATE.getColumnNumber(), formatter.format(sampleDto.getProductionDate()));
+        worksheet_1.value(rowNumber, PRODUCTION_DATE.getColumnNumber(), formatter.formatDate(sampleDto.getProductionDate()));
         worksheet_1.value(rowNumber, VESSEL.getColumnNumber(), Objects.isNull(sampleDto.getVessels())
             ? ""
             : sampleDto.getVessels().stream()
