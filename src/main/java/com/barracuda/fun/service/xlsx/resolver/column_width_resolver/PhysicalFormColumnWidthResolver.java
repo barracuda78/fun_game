@@ -1,4 +1,4 @@
-package com.barracuda.fun.service.xlsx.resolver;
+package com.barracuda.fun.service.xlsx.resolver.column_width_resolver;
 
 import com.barracuda.fun.service.data.SampleDto;
 import com.barracuda.fun.service.xlsx.SearchResultColumnHeaderName;
@@ -11,12 +11,12 @@ import org.springframework.stereotype.Component;
 public class PhysicalFormColumnWidthResolver implements ColumnWidthResolver {
 
     @Override
-    public boolean canResolve(SearchResultColumnHeaderName e) {
+    public boolean canResolve(@NonNull SearchResultColumnHeaderName e) {
         return e == SearchResultColumnHeaderName.PHYSICAL_FORM;
     }
 
     @Override
-    public int resolve(SearchResultColumnHeaderName e, @NonNull List<SampleDto> sampleDtoList) {
+    public int resolve(@NonNull SearchResultColumnHeaderName e, @NonNull List<SampleDto> sampleDtoList) {
         int maxValueLength = sampleDtoList.stream()
             .map(s -> Objects.nonNull(s.getPhysicalForm())
                 ? s.getPhysicalForm().getValue().length()

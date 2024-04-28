@@ -1,4 +1,4 @@
-package com.barracuda.fun.service.xlsx.resolver;
+package com.barracuda.fun.service.xlsx.resolver.column_width_resolver;
 
 import com.barracuda.fun.service.data.SampleDto;
 import com.barracuda.fun.service.data.SampleVesselDto;
@@ -12,12 +12,12 @@ import org.springframework.stereotype.Component;
 public class VesselsColumnWidthResolver implements ColumnWidthResolver {
 
     @Override
-    public boolean canResolve(SearchResultColumnHeaderName e) {
+    public boolean canResolve(@NonNull SearchResultColumnHeaderName e) {
         return e == SearchResultColumnHeaderName.VESSEL;
     }
 
     @Override
-    public int resolve(SearchResultColumnHeaderName e, @NonNull List<SampleDto> sampleDtoList) {
+    public int resolve(@NonNull SearchResultColumnHeaderName e, @NonNull List<SampleDto> sampleDtoList) {
         int maxValueLength = sampleDtoList.stream()
             .filter(s -> Objects.nonNull(s.getVessels()))
             .flatMap(s -> s.getVessels().stream())

@@ -23,6 +23,11 @@ public class SampleFactory {
                     .code("some code" + param)
                     .value("some value" + param)
                     .build()))
+            .physicalForm(DictionaryValueDto.builder()
+                .id(UUID.randomUUID())
+                .code("Some physical form code" + param)
+                .value("Some physical form value" + param)
+                .build())
             .productionDate(LocalDate.now())
             .vessels(List.of(SampleVesselDto.builder()
                     .id(UUID.randomUUID())
@@ -35,11 +40,18 @@ public class SampleFactory {
             .linkedConcepts(List.of(
                 SampleLinkedConceptShortDto.builder()
                     .id(UUID.randomUUID())
-                    .name("some concept name" + param)
-                    .conceptType(
-                        param > 1
-                        ? ConceptType.naturalSource
-                        : ConceptType.chemicalCompound)
+                    .name("some concept name 1" + param)
+                    .conceptType(ConceptType.naturalSource)
+                    .build(),
+                SampleLinkedConceptShortDto.builder()
+                    .id(UUID.randomUUID())
+                    .name("some concept name 2" + param)
+                    .conceptType(ConceptType.chemicalCompound)
+                    .build(),
+                SampleLinkedConceptShortDto.builder()
+                    .id(UUID.randomUUID())
+                    .name("some concept name 3" + param)
+                    .conceptType(ConceptType.strain)
                     .build()
             ));
     }

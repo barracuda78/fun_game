@@ -32,7 +32,7 @@ public class ResultServiceImpl {
     public byte[] getByteArrayFromSearchResult(List<SampleDto> sampleDtoList,  ParamsDto paramsDto) {
         String filePathString = "C:\\epam\\projects\\ALL_LEARNING_PROJECTS\\fun\\fun\\src\\main\\resources\\xls\\object_collection_output.xlsx";
 
-        excelWriter.writeExcel(filePathString, sampleDtoList, paramsDto);
+        excelWriter.write(filePathString, sampleDtoList, paramsDto);
         Path path = Paths.get(filePathString);
         byte[] fileContent = null;
         try {
