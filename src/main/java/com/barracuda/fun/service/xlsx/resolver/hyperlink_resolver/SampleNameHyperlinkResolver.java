@@ -18,8 +18,8 @@ public class SampleNameHyperlinkResolver  implements HyperlinkResolver {
     }
 
     @Override
-    public String createUrl(@NonNull SampleDto sampleDto) {
-        return String.format(BASE_URL_FORMAT, getEnvironment())
+    public String createUrl(@NonNull String baseUrl, @NonNull SampleDto sampleDto) {
+        return baseUrl
             .concat(SAMPLE)
             .concat(sampleDto.getId().toString());
     }

@@ -25,8 +25,8 @@ public class LinkedConceptsHyperlinkResolver implements HyperlinkResolver {
     }
 
     @Override
-    public String createUrl(@NonNull SampleDto sampleDto) {
-        return String.format(BASE_URL_FORMAT, getEnvironment())
+    public String createUrl(@NonNull String baseUrl, @NonNull SampleDto sampleDto) {
+        return baseUrl
             .concat(getUrlPart(sampleDto.getLinkedConcepts().get(0).getConceptType())) //TODO: get not only first link. Merge cells. use multiple links.
             .concat(sampleDto.getLinkedConcepts().get(0).getId().toString());
     }

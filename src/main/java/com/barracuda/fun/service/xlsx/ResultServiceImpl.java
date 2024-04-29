@@ -26,13 +26,13 @@ public class ResultServiceImpl {
 
     public FileResponse getFileResponse(List<SampleDto> sampleDtoList,  ParamsDto paramsDto) {
         String filename = fileNameGenerator.generate();
-        byte[] array = getByteArrayFromSearchResult(sampleDtoList, paramsDto, filename);
+        byte[] array = getByteArrayFromSearchResult(sampleDtoList, paramsDto);
         ByteArrayResource content = new ByteArrayResource(array);
         HttpHeaders header = headerCreator.createExcelHeader(filename, content);
         return new FileResponse(header, content);
     }
 
-    private byte[] getByteArrayFromSearchResult(List<SampleDto> sampleDtoList,  ParamsDto paramsDto, String filename) {
+    private byte[] getByteArrayFromSearchResult(List<SampleDto> sampleDtoList,  ParamsDto paramsDto) {
         byte[] fileContent = null;
         try {
             Path tempFilePath = Files.createTempFile(fileNameGenerator.generateWithoutExtension(), EXTENSION);

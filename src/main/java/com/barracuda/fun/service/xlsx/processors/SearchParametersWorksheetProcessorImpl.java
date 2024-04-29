@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Objects;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.dhatim.fastexcel.BorderStyle;
 import org.dhatim.fastexcel.Workbook;
 import org.dhatim.fastexcel.Worksheet;
 import org.springframework.data.util.Pair;
@@ -41,6 +42,8 @@ public class SearchParametersWorksheetProcessorImpl implements SearchParametersW
         worksheet_2.range(0, 0, 0, 1).style()
             .horizontalAlignment(CENTER_HORIZONTAL_ALIGNMENT)
             .wrapText(true)
+            .borderStyle(BorderStyle.THIN)
+            .bold()
             .set();
         worksheet_2.value(0, 0, SEARCH_PARAMETERS_FIRST_COLUMN_NAME);
         worksheet_2.value(0, 1, SEARCH_PARAMETERS_SECOND_COLUMN_NAME);
@@ -69,7 +72,11 @@ public class SearchParametersWorksheetProcessorImpl implements SearchParametersW
         int numberOfColumn = 0;
         List<String> parameterNames = defineParameterNames(params).keySet().stream().toList();
         int rowAmount = parameterNames.size();
-        worksheet_2.range(1, numberOfColumn, rowAmount, 1).style().fillColor("FF8800").wrapText(true).set();
+        worksheet_2.range(1, numberOfColumn, rowAmount, 1).style()
+//            .fillColor("FF8800") //TODO: remove
+            .wrapText(true)
+            .borderStyle(BorderStyle.THIN)
+            .set();
         for (int row = 1; row <= rowAmount; row++) {
             int parameterNameIndex = row - 1;
             worksheet_2.value(row, numberOfColumn, parameterNames.get(parameterNameIndex));

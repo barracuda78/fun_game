@@ -6,11 +6,9 @@ import lombok.NonNull;
 
 public interface HyperlinkResolver {
 
-    String BASE_URL_FORMAT = "https://%s.lumos.cloud.syngenta.org/";
-
     boolean canResolve(SearchResultColumnHeaderName e);
 
-    String createUrl(@NonNull SampleDto sampleDto);
+    String createUrl(@NonNull String baseUrl, @NonNull SampleDto sampleDto);
 
     default String getEnvironment() {
         return "dev";

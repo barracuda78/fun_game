@@ -28,6 +28,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.dhatim.fastexcel.BorderStyle;
 import org.dhatim.fastexcel.HyperLink;
 import org.dhatim.fastexcel.Workbook;
 import org.dhatim.fastexcel.Worksheet;
@@ -59,7 +60,9 @@ public class SearchResultsWorksheetProcessorImpl implements SearchResultsWorkshe
         var rightBoarderCoordinate = columnAmount - 1;
         worksheet_1.range(0, 0, 0, rightBoarderCoordinate).style()
             .horizontalAlignment(CENTER_HORIZONTAL_ALIGNMENT)
-            .fillColor("FF8800")
+            .bold()
+            .borderStyle(BorderStyle.THIN)
+//            .fillColor("FF8800") //TODO: remove
             .wrapText(true)
             .set();
         Arrays.stream(SearchResultColumnHeaderName.values())
@@ -80,9 +83,10 @@ public class SearchResultsWorksheetProcessorImpl implements SearchResultsWorkshe
     public  void createSearchResultTableContent(Worksheet worksheet_1, List<SampleDto> sampleDtoList) {
         //TODO: style -> to separate logic!
         //TODO: align vertically!
-        worksheet_1.range(1, 0, sampleDtoList.size(), SearchResultColumnHeaderName.values().length)
+        worksheet_1.range(1, 0, sampleDtoList.size(), SearchResultColumnHeaderName.values().length - 1)
             .style()
             .wrapText(true)
+            .borderStyle(BorderStyle.THIN)
             .set();
         for (int i = 0; i < sampleDtoList.size(); i++) {
             writeSingleRow(worksheet_1, sampleDtoList.get(i), 1 + i);
@@ -90,20 +94,20 @@ public class SearchResultsWorksheetProcessorImpl implements SearchResultsWorkshe
     }
 
     private void writeSingleRow(Worksheet worksheet_1, SampleDto sampleDto, int rowNumber) {
+        String baseUrl = "https://dev.lumos.cloud.syngenta.org/"; //TODO: get it from request params!
         HyperlinkResolver sampleNameHyperlinkResolver = hyperLinkResolverRegistry.getRegistry(SAMPLE_NAME);
         worksheet_1.hyperlink(
             rowNumber,
             SAMPLE_NAME.getColumnNumber(),
-            new HyperLink(sampleNameHyperlinkResolver.createUrl(sampleDto), sampleDto.getName())
+            new HyperLink(sampleNameHyperlinkResolver.createUrl(baseUrl, sampleDto), sampleDto.getName())
         );
-
 
         if (Objects.nonNull(sampleDto.getProcess())) {
             HyperlinkResolver processHyperlinkResolver = hyperLinkResolverRegistry.getRegistry(SOURCE_PROCESS);
             worksheet_1.hyperlink(
                 rowNumber,
                 SOURCE_PROCESS.getColumnNumber(),
-                new HyperLink(processHyperlinkResolver.createUrl(sampleDto), sampleDto.getProcess().getName()));
+                new HyperLink(processHyperlinkResolver.createUrl(baseUrl, sampleDto), sampleDto.getProcess().getName()));
         }
 
         worksheet_1.value(rowNumber, ISN.getColumnNumber(), sampleDto.getIsn());
@@ -125,13 +129,12 @@ public class SearchResultsWorksheetProcessorImpl implements SearchResultsWorkshe
                 .map(SampleVesselDto::getBarcode)
                 .collect(Collectors.joining(NEW_LINE_DELIMITER)));
 
-
         if (! CollectionUtils.isEmpty(sampleDto.getLinkedConcepts())) {
             HyperlinkResolver linkedConceptsHyperlinkResolver = hyperLinkResolverRegistry.getRegistry(LINKED_CONCEPTS);
             worksheet_1.hyperlink(
                 rowNumber,
                 LINKED_CONCEPTS.getColumnNumber(),
-                new HyperLink(linkedConceptsHyperlinkResolver.createUrl(sampleDto), sampleDto.getLinkedConcepts().stream()
+                new HyperLink(linkedConceptsHyperlinkResolver.createUrl(baseUrl, sampleDto), sampleDto.getLinkedConcepts().stream()
                     .map(lc -> lc.getName() + " (" + lc.getConceptType().name() + ")")//TODO: check in the real app that enum has a good string representation
                     .collect(Collectors.joining(NEW_LINE_DELIMITER)))
             );

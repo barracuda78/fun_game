@@ -19,8 +19,8 @@ public class SourceProcessHyperlinkResolver implements HyperlinkResolver {
     }
 
     @Override
-    public String createUrl(@NonNull SampleDto sampleDto) {
-        return String.format(BASE_URL_FORMAT, getEnvironment())
+    public String createUrl(@NonNull String baseUrl, @NonNull SampleDto sampleDto) {
+        return baseUrl
             .concat(ELN)
             .concat(sampleDto.getProcess().getElnId().toString())
             .concat(PROCESS)
