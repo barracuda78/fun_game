@@ -53,6 +53,7 @@ public class DrawServiceImpl extends JPanel {
         repaint(); //this calls paintComponent(Graphics graphics) method.
     }
 
+    @Override
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         graphics2D = (Graphics2D) graphics;

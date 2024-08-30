@@ -49,12 +49,12 @@ public class Player extends Entity { //TODO: should not inherit from Entity!
     @PostConstruct
     public void init() {
         solidArea = new Rectangle();
-        solidArea.x = 8;
-        solidArea.y = 16;
+        solidArea.x = 0;
+        solidArea.y = 0;
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
-        solidArea.height = 32;
-        solidArea.width = 32;
+        solidArea.height = 40;
+        solidArea.width = 40;
         setDefaultValues();
         setCoordinates(TILE_SIZE * 23, TILE_SIZE * 21);
         loadPlayerImage();

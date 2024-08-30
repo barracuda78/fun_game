@@ -36,36 +36,36 @@ public class CollisionChecker {
             case "up":
                 //predict where player will be when he moves:
                 entityTopRow = (entityTopWorldY - entity.speed) / TILE_SIZE;
-                tileNum_1 = tileManager.mapTile[entityLeftCol][entityTopRow];
-                tileNum_2 = tileManager.mapTile[entityRightCol][entityTopRow];
-                if (tileManager.tile[tileNum_1].collision == true || tileManager.tile[tileNum_2].collision == true) {
+                tileNum_1 = tileManager.mapTileArray[entityLeftCol][entityTopRow];
+                tileNum_2 = tileManager.mapTileArray[entityRightCol][entityTopRow];
+                if (tileManager.tileArray[tileNum_1].collision == true || tileManager.tileArray[tileNum_2].collision == true) {
                     entity.collisionOn = true;
                 }
                 break;
             case "down":
                 //predict where player will be when he moves:
-                entityBottomRow = (entityBottomWorldY - entity.speed) / TILE_SIZE;
-                tileNum_1 = tileManager.mapTile[entityLeftCol][entityBottomRow];
-                tileNum_2 = tileManager.mapTile[entityRightCol][entityBottomRow];
-                if (tileManager.tile[tileNum_1].collision == true || tileManager.tile[tileNum_2].collision == true) {
+                entityBottomRow = (entityBottomWorldY + entity.speed) / TILE_SIZE;
+                tileNum_1 = tileManager.mapTileArray[entityLeftCol][entityBottomRow];
+                tileNum_2 = tileManager.mapTileArray[entityRightCol][entityBottomRow];
+                if (tileManager.tileArray[tileNum_1].collision == true || tileManager.tileArray[tileNum_2].collision == true) {
                     entity.collisionOn = true;
                 }
                 break;
             case "left":
                 //predict where player will be when he moves:
                 entityLeftCol = (entityLeftWorldX - entity.speed) / TILE_SIZE;
-                tileNum_1 = tileManager.mapTile[entityLeftCol][entityTopRow];
-                tileNum_2 = tileManager.mapTile[entityLeftCol][entityBottomRow];
-                if (tileManager.tile[tileNum_1].collision == true || tileManager.tile[tileNum_2].collision == true) {
+                tileNum_1 = tileManager.mapTileArray[entityLeftCol][entityTopRow];
+                tileNum_2 = tileManager.mapTileArray[entityLeftCol][entityBottomRow];
+                if (tileManager.tileArray[tileNum_1].collision == true || tileManager.tileArray[tileNum_2].collision == true) {
                     entity.collisionOn = true;
                 }
                 break;
             case "right":
                 //predict where player will be when he moves:
-                entityRightCol = (entityRightWorldX - entity.speed) / TILE_SIZE;
-                tileNum_1 = tileManager.mapTile[entityRightCol][entityTopRow];
-                tileNum_2 = tileManager.mapTile[entityRightCol][entityBottomRow];
-                if (tileManager.tile[tileNum_1].collision == true || tileManager.tile[tileNum_2].collision == true) {
+                entityRightCol = (entityRightWorldX + entity.speed) / TILE_SIZE;
+                tileNum_1 = tileManager.mapTileArray[entityRightCol][entityTopRow];
+                tileNum_2 = tileManager.mapTileArray[entityRightCol][entityBottomRow];
+                if (tileManager.tileArray[tileNum_1].collision == true || tileManager.tileArray[tileNum_2].collision == true) {
                     entity.collisionOn = true;
                 }
                 break;

@@ -2,10 +2,13 @@ package com.barracuda.fun.gui.entity;
 
 import com.barracuda.fun.enums.MovementDirection;
 import com.barracuda.fun.gui.CollisionChecker;
+import com.barracuda.fun.gui.PlayerCoordinatesService;
+import com.barracuda.fun.gui.TileCoordinatesService;
 import com.barracuda.fun.gui.entity.draw_handler.DrawEntityDirectionHandlerRegistry;
+import com.barracuda.fun.gui.enums.Direction;
 import jakarta.annotation.PostConstruct;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.util.Random;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -13,8 +16,19 @@ import org.springframework.stereotype.Component;
 @Scope("prototype")
 public class DogNpc extends Entity {
 
-    public DogNpc(CollisionChecker collisionChecker, DrawEntityDirectionHandlerRegistry drawEntityDirectionHandlerRegistry, Sprites sprites) {
+    private final PlayerCoordinatesService playerCoordinatesService;
+
+    private final TileCoordinatesService tileCoordinatesService;
+
+    public DogNpc(CollisionChecker collisionChecker,
+        DrawEntityDirectionHandlerRegistry drawEntityDirectionHandlerRegistry,
+        Sprites sprites,
+        PlayerCoordinatesService playerCoordinatesService,
+        TileCoordinatesService tileCoordinatesService
+    ) {
         super(collisionChecker, drawEntityDirectionHandlerRegistry, sprites);
+        this.playerCoordinatesService = playerCoordinatesService;
+        this.tileCoordinatesService = tileCoordinatesService;
     }
 
     @PostConstruct
@@ -48,23 +62,119 @@ public class DogNpc extends Entity {
     public void setAction() {
         actionLockCounter++;
 
+        Point playerCoordinates = playerCoordinatesService.getPlayerCoordinates();
+        Point thisNpcCoordinates = this.getCoordinates();
+
         if(actionLockCounter == 120) {
-            Random random = new Random();
-            int i = random.nextInt(100) + 1;
-            if( i < 25) {
-                direction = "up";
+            final boolean rightTileSolid = tileCoordinatesService.isNearestTileSolid(thisNpcCoordinates, Direction.RIGHT);
+            final boolean upTileSolid = tileCoordinatesService.isNearestTileSolid(thisNpcCoordinates, Direction.UP);
+            final boolean downTileSolid = tileCoordinatesService.isNearestTileSolid(thisNpcCoordinates, Direction.DOWN);
+            final boolean leftTileSolid = tileCoordinatesService.isNearestTileSolid(thisNpcCoordinates, Direction.LEFT);
+            int xDifference = playerCoordinates.x - thisNpcCoordinates.x;
+            int yDifference = playerCoordinates.y - thisNpcCoordinates.y;
+
+            // Player is right up from the dog:
+            if (playerCoordinates.x >= thisNpcCoordinates.x && playerCoordinates.y <= thisNpcCoordinates.y) {
+                if (xDifference > yDifference) {
+                        if(! rightTileSolid) {
+                            direction = "right";
+                        } else if (! upTileSolid) {
+                            direction = "up";
+                        } else if (! downTileSolid) {
+                            direction = "down";
+                        } else if (! leftTileSolid) {
+                            direction = "left";
+                        }
+                } else {
+                        if (! upTileSolid) {
+                            direction = "up";
+                        } else if (! rightTileSolid) {
+                            direction = "right";
+                        } else if (! downTileSolid) {
+                            direction = "down";
+                        } else if (! leftTileSolid) {
+                            direction = "left";
+                        }
+                    }
             }
-            if (i > 25 && i <= 50) {
-                direction = "down";
+            // Player is left up from the dog:
+            else if (playerCoordinates.x < thisNpcCoordinates.x && playerCoordinates.y <= thisNpcCoordinates.y) {
+                if (xDifference > yDifference) {
+                    if(! leftTileSolid) {
+                        direction = "left";
+                    } else if (! upTileSolid) {
+                        direction = "up";
+                    } else if (! downTileSolid) {
+                        direction = "down";
+                    } else if (! rightTileSolid) {
+                        direction = "right";
+                    }
+                } else {
+                    if (! upTileSolid) {
+                        direction = "up";
+                    } else if(! leftTileSolid) {
+                        direction = "left";
+                    }  else if (! downTileSolid) {
+                        direction = "down";
+                    } else if (! rightTileSolid) {
+                        direction = "right";
+                    }
+                }
+
             }
-            if ( i > 50 && i <= 75) {
-                direction = "left";
+
+            // Player is right down from the dog:
+            else if (playerCoordinates.x >= thisNpcCoordinates.x && playerCoordinates.y > thisNpcCoordinates.y) {
+                if (xDifference > yDifference) {
+                    if (! rightTileSolid) {
+                        direction = "right";
+                    } else if (! downTileSolid) {
+                        direction = "down";
+                    } else if (! upTileSolid) {
+                        direction = "up";
+                    }  else if (! leftTileSolid) {
+                        direction = "left";
+                    }
+                } else {
+                    if (! downTileSolid) {
+                        direction = "down";
+                    } else if (! rightTileSolid) {
+                        direction = "right";
+                    }  else if (! upTileSolid) {
+                        direction = "up";
+                    }  else if (! leftTileSolid) {
+                        direction = "left";
+                    }
+                }
             }
-            if ( i > 75 && i <= 100) {
-                direction = "right";
+
+            // Player is left down from the dog:
+            else if (playerCoordinates.x < thisNpcCoordinates.x && playerCoordinates.y > thisNpcCoordinates.y) {
+                if (xDifference > yDifference) {
+                    if (! leftTileSolid) {
+                        direction = "left";
+                    } else if (! downTileSolid) {
+                        direction = "down";
+                    } else if (! upTileSolid) {
+                        direction = "up";
+                    }  else if (! rightTileSolid) {
+                        direction = "right";
+                    }
+                } else {
+                    if (! downTileSolid) {
+                        direction = "down";
+                    } else if (! leftTileSolid) {
+                        direction = "left";
+                    }  else if (! upTileSolid) {
+                        direction = "up";
+                    }  else if (! rightTileSolid) {
+                        direction = "right";
+                    }
+                }
             }
             actionLockCounter = 0;
         }
+
 
     }
 

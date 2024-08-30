@@ -24,14 +24,14 @@ public class TileManager {
 
     private final CalculationServiceImpl calculationService;
 
-    public Tile[] tile;
+    public Tile[] tileArray;
 
-    public int[][] mapTile;
+    public int[][] mapTileArray;
 
     @PostConstruct
     public void init() {
-        tile = new Tile[99];
-        mapTile = new int[MAX_WORLD_COLUMN][MAX_WORLD_ROW];
+        tileArray = new Tile[99];
+        mapTileArray = new int[MAX_WORLD_COLUMN][MAX_WORLD_ROW];
         getTileImage();
         loadMap("/graphics/maps/world_01_enhanced.txt");
     }
@@ -70,10 +70,10 @@ public class TileManager {
     public void setup(int index, String imageName, boolean collision) {
         ImageScalerServiceImpl tool = new ImageScalerServiceImpl();
         try {
-            tile[index] = new Tile();
-            tile[index].image = ImageIO.read(getClass().getResourceAsStream("/graphics/tiles/" + imageName + ".png"));
-            tile[index].image = tool.scaleImage(tile[index].image, TILE_SIZE, TILE_SIZE);
-            tile[index].collision = collision;
+            tileArray[index] = new Tile();
+            tileArray[index].image = ImageIO.read(getClass().getResourceAsStream("/graphics/tiles/" + imageName + ".png"));
+            tileArray[index].image = tool.scaleImage(tileArray[index].image, TILE_SIZE, TILE_SIZE);
+            tileArray[index].collision = collision;
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -92,7 +92,7 @@ public class TileManager {
                 while(col < MAX_WORLD_COLUMN) {
                     String numbers[] = line.split(" ");
                     int num = Integer.parseInt(numbers[col]);
-                    mapTile[col][row] = num;
+                    mapTileArray[col][row] = num;
                     col++;
                 }
                 if(col == MAX_WORLD_COLUMN) {
@@ -113,7 +113,7 @@ public class TileManager {
         int worldRow = 0;
 
         while (worldColumn < MAX_WORLD_COLUMN && worldRow < MAX_WORLD_ROW) {
-            int tileNum = mapTile[worldColumn][worldRow];
+            int tileNum = mapTileArray[worldColumn][worldRow];
 
             final Point point = calculationService.calculateCoordinates(playerCoordinates, worldColumn, worldRow);
 
@@ -126,7 +126,7 @@ public class TileManager {
                     &&
                 worldRow * TILE_SIZE  - TILE_SIZE < playerCoordinates.y + SCREEN_CENTER_Y
             ) {
-                graphics2D.drawImage(tile[tileNum].image, point.x, point.y, TILE_SIZE, TILE_SIZE, null);
+                graphics2D.drawImage(tileArray[tileNum].image, point.x, point.y, TILE_SIZE, TILE_SIZE, null);
             }
             worldColumn++;
             if (worldColumn == MAX_WORLD_COLUMN) {

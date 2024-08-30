@@ -6,6 +6,7 @@ import static com.barracuda.fun.gui.constants.ScreenSettings.TILE_SIZE;
 
 import com.barracuda.fun.gui.CollisionChecker;
 import com.barracuda.fun.gui.ImageScalerServiceImpl;
+import com.barracuda.fun.gui.PlayerCoordinatesService;
 import com.barracuda.fun.gui.entity.draw_handler.DrawEntityDirectionHandler;
 import com.barracuda.fun.gui.entity.draw_handler.DrawEntityDirectionHandlerRegistry;
 import com.barracuda.fun.gui.item.Item;
@@ -32,7 +33,7 @@ public class Entity {
 
     public int spriteNumber = 1;
 
-    public Rectangle solidArea = new Rectangle(0,0,48,48);
+    public Rectangle solidArea = new Rectangle(0,0,40,40);
 
     public int solidAreaDefaultX;
 
@@ -42,7 +43,11 @@ public class Entity {
 
     public int actionLockCounter = 0;
 
-    public Entity(CollisionChecker collisionChecker, DrawEntityDirectionHandlerRegistry drawEntityDirectionHandlerRegistry, Sprites sprites) {
+    public Entity(
+        CollisionChecker collisionChecker,
+        DrawEntityDirectionHandlerRegistry drawEntityDirectionHandlerRegistry,
+        Sprites sprites
+    ) {
         this.collisionChecker = collisionChecker;
         this.drawEntityDirectionHandlerRegistry = drawEntityDirectionHandlerRegistry;
         this.coordinates = new Point();
