@@ -40,7 +40,7 @@ public class TileManager {
 
         setup(0, "tile_brick", true);
         setup(1, "tile_grass_02", false);
-        setup(2, "tile_water", true);
+        setup(2, "tile_water", false);
         setup(3, "earth", false);
         setup(4, "tree_02", true);
         setup(5, "sand", false);

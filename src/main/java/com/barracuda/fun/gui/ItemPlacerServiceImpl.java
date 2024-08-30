@@ -28,9 +28,14 @@ public class ItemPlacerServiceImpl {
     private final DoorItem doorItem_2;
     private final ChestItem chestItem;
     private final FishItem fishItem;
+    private final FishItem fishItem_1;
+    private final FishItem fishItem_2;
     private final BootsItem bootsItem_1;
     private final BootsItem bootsItem_2;
     private final SausageItem sausageItem;
+    private final SausageItem sausageItem_1;
+    private final SausageItem coinItem_1;
+    private final SausageItem coinItem_2;
 
     private final Item[] items = new Item[99];
 
@@ -51,9 +56,14 @@ public class ItemPlacerServiceImpl {
         items[3].worldX = 30 * TILE_SIZE;
         items[3].worldY = 12 * TILE_SIZE;
 
+//        items[4] = chestItem;
+//        items[4].worldX = 40 * TILE_SIZE;
+//        items[4].worldY = 7 * TILE_SIZE;
+
         items[4] = chestItem;
-        items[4].worldX = 40 * TILE_SIZE;
-        items[4].worldY = 7 * TILE_SIZE;
+        items[4].worldX = 5 * TILE_SIZE;
+        items[4].worldY = 2 * TILE_SIZE;
+
 
         items[5] = fishItem;
         items[5].worldX = 13 * TILE_SIZE;
@@ -74,6 +84,26 @@ public class ItemPlacerServiceImpl {
         items[9] = bootsItem_2;
         items[9].worldX = 40 * TILE_SIZE;
         items[9].worldY = 17 * TILE_SIZE;
+
+        items[10] = fishItem_1;
+        items[10].worldX = 15 * TILE_SIZE;
+        items[10].worldY = 9 * TILE_SIZE;
+
+        items[11] = fishItem_2;
+        items[11].worldX = 12 * TILE_SIZE;
+        items[11].worldY = 11 * TILE_SIZE;
+
+        items[12] = sausageItem_1;
+        items[12].worldX = 6 * TILE_SIZE;
+        items[12].worldY = 44 * TILE_SIZE;
+
+        items[13] = coinItem_1;
+        items[13].worldX = 40 * TILE_SIZE;
+        items[13].worldY = 7 * TILE_SIZE;
+
+        items[14] = coinItem_2;
+        items[14].worldX = 42 * TILE_SIZE;
+        items[14].worldY = 10 * TILE_SIZE;
     }
 
     public Item[] getItems() {

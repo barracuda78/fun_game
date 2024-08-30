@@ -20,7 +20,7 @@ public class FunServiceImpl implements FunService {
     }
 
     @Override
-    public Integer createNewFun(@NonNull FunDto funDto) { //TODO: use mapper mapstruct here
+    public Integer createNewFun(@NonNull FunDto funDto) {
         final Fun fun = Fun.builder()
             .name(funDto.getName())
             .isActive(funDto.getIsActive())
