@@ -73,9 +73,12 @@ public class DogNpc extends Entity {
             int xDifference = playerCoordinates.x - thisNpcCoordinates.x;
             int yDifference = playerCoordinates.y - thisNpcCoordinates.y;
 
+            int xDiffPositive = xDifference < 0 ? xDifference * -1 : xDifference;
+            int yDiffPositive = yDifference < 0 ? yDifference * -1 : yDifference;
+
             // Player is right up from the dog:
             if (playerCoordinates.x >= thisNpcCoordinates.x && playerCoordinates.y <= thisNpcCoordinates.y) {
-                if (xDifference > yDifference) {
+                if (xDiffPositive > yDiffPositive) {
                         if(! rightTileSolid) {
                             direction = "right";
                         } else if (! upTileSolid) {
@@ -99,7 +102,7 @@ public class DogNpc extends Entity {
             }
             // Player is left up from the dog:
             else if (playerCoordinates.x < thisNpcCoordinates.x && playerCoordinates.y <= thisNpcCoordinates.y) {
-                if (xDifference > yDifference) {
+                if (xDiffPositive > yDiffPositive) {
                     if(! leftTileSolid) {
                         direction = "left";
                     } else if (! upTileSolid) {
@@ -125,7 +128,7 @@ public class DogNpc extends Entity {
 
             // Player is right down from the dog:
             else if (playerCoordinates.x >= thisNpcCoordinates.x && playerCoordinates.y > thisNpcCoordinates.y) {
-                if (xDifference > yDifference) {
+                if (xDiffPositive > yDiffPositive) {
                     if (! rightTileSolid) {
                         direction = "right";
                     } else if (! downTileSolid) {
@@ -150,7 +153,7 @@ public class DogNpc extends Entity {
 
             // Player is left down from the dog:
             else if (playerCoordinates.x < thisNpcCoordinates.x && playerCoordinates.y > thisNpcCoordinates.y) {
-                if (xDifference > yDifference) {
+                if (xDiffPositive > yDiffPositive) {
                     if (! leftTileSolid) {
                         direction = "left";
                     } else if (! downTileSolid) {
