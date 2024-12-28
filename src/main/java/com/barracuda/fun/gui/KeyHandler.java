@@ -23,6 +23,8 @@ public class KeyHandler implements KeyListener {
 
     public boolean musicOn = true;
 
+    public boolean gameInterrupted;
+
     @Override
     public void keyTyped(KeyEvent e) {
         //we are not gonna use it
@@ -60,6 +62,9 @@ public class KeyHandler implements KeyListener {
                 musicOn = true;
                 soundService.playMusic(0);
             }
+        }
+        if (code == KeyEvent.VK_ESCAPE) {
+            gameInterrupted = true;
         }
     }
 

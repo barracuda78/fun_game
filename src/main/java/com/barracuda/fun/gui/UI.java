@@ -35,6 +35,8 @@ public class UI {
 
     private final SausageItem sausageItem;
 
+    private final GameThreadServiceImpl gameThreadService;
+
     Graphics2D graphics2D;
 
     public boolean isMessageOn = false;
@@ -56,7 +58,7 @@ public class UI {
         isMessageOn = true;
     }
 
-    public void draw(Graphics2D g2, Player player, Thread gameThread) {
+    public void draw(Graphics2D g2, Player player) {
         this.graphics2D = g2; //TODO: do not initialize it like this!
 
         //old stuff:
@@ -83,7 +85,7 @@ public class UI {
             y = SCREEN_HEIGHT / 2 + (TILE_SIZE * 2);
             graphics2D.drawString(text, x, y);
 
-            gameThread = null;
+            gameThreadService.stopGameThread();
 
         } else {
             graphics2D.setFont(ARIAL_40_FONT);
@@ -110,8 +112,7 @@ public class UI {
             graphics2D.drawString(": " + player.sausageAmount, 628, 60);
 
             playTime += (double) 1/60;
-            graphics2D.drawString("Time:" + decimalFormat.format(playTime), TILE_SIZE * 11, TILE_SIZE
-                * 11);
+            graphics2D.drawString("Time:" + decimalFormat.format(playTime), TILE_SIZE * 20, TILE_SIZE * 17);
 
             if (player.bootsOn) {
                 graphics2D.drawImage(bootsItem.image, TILE_SIZE / 2, TILE_SIZE * 11,

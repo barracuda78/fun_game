@@ -28,11 +28,4 @@ public class WindowFrame extends JFrame {
         gamePanel.startGameThread();
     }
 
-//    public static void main(String[] args) {
-//        KeyHandler keyHandler = new KeyHandler();
-//        GamePanel gamePanel = new GamePanel(keyHandler);
-//        WindowFrame windowFrame = new WindowFrame(gamePanel);
-//        windowFrame.init();
-//    }
-
 }

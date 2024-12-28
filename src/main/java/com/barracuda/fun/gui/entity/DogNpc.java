@@ -1,12 +1,18 @@
 package com.barracuda.fun.gui.entity;
 
+import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_CENTER_X;
+import static com.barracuda.fun.gui.constants.ScreenSettings.SCREEN_CENTER_Y;
+import static com.barracuda.fun.gui.constants.ScreenSettings.TILE_SIZE;
+
 import com.barracuda.fun.enums.MovementDirection;
 import com.barracuda.fun.gui.CollisionChecker;
 import com.barracuda.fun.gui.PlayerCoordinatesService;
 import com.barracuda.fun.gui.TileCoordinatesService;
+import com.barracuda.fun.gui.entity.draw_handler.DrawEntityDirectionHandler;
 import com.barracuda.fun.gui.entity.draw_handler.DrawEntityDirectionHandlerRegistry;
 import com.barracuda.fun.gui.enums.Direction;
 import jakarta.annotation.PostConstruct;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import org.springframework.context.annotation.Scope;
@@ -36,6 +42,15 @@ public class DogNpc extends Entity {
         direction = "down";
         speed = 1;
         loadDogNPCImage();
+    }
+
+    @Override
+    public void draw(Graphics2D graphics2D, Point playerCoordinates) {
+        int screenX = coordinates.x - playerCoordinates.x + SCREEN_CENTER_X;
+        int screenY = coordinates.y - playerCoordinates.y + SCREEN_CENTER_Y;
+        final DrawEntityDirectionHandler handler = drawEntityDirectionHandlerRegistry.getHandler(direction);
+        final BufferedImage image = handler.handle(spriteNumber, sprites.getImages());
+        graphics2D.drawImage(image, screenX, screenY, TILE_SIZE, TILE_SIZE, null);
     }
 
     public void loadDogNPCImage() {

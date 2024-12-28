@@ -15,8 +15,8 @@ public class GamePanel implements Runnable {
     private final NpcPlacerServiceImpl npcPlacerService;
     private final Player player ;
     private final DrawServiceImpl drawService;
-
-    public Thread gameThread;
+    private final GameThreadServiceImpl gameThreadService;
+//    public Thread gameThread;
 
     // GAME STATE:
     public final int playState = 1;
@@ -25,8 +25,7 @@ public class GamePanel implements Runnable {
     public int gameState = playState;
 
     public void startGameThread() {
-        gameThread = new Thread(this);
-        gameThread.start();
+        gameThreadService.startGameThread(this);
     }
 
     @Override
@@ -35,7 +34,8 @@ public class GamePanel implements Runnable {
         double delta = 0.0;
         long lastTime = System.nanoTime();
         long currentTime;
-        while (gameThread != null) {
+        while (gameThreadService.gameThreadRunning()) {
+            checkGameInterrupted();
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime)/drawInterval;
             lastTime = currentTime;
@@ -54,6 +54,15 @@ public class GamePanel implements Runnable {
                 if(npcPlacerService.getNpcs()[i] != null) {
                     npcPlacerService.getNpcs()[i].update(player, itemPlacerService.getItems());
                 }
+            }
+        }
+    }
+
+    public void checkGameInterrupted() {
+        if (keyHandler.gameInterrupted) {
+            gameThreadService.interruptGameThread();
+            if (gameThreadService.gameThreadInterrupted()) {
+                System.exit(0);
             }
         }
     }

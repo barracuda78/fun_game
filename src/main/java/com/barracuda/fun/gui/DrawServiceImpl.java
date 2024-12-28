@@ -33,7 +33,6 @@ public class DrawServiceImpl extends JPanel {
     private final ItemPlacerServiceImpl itemPlacerService;
 
     private final NpcPlacerServiceImpl npcPlacerService;
-
     Graphics2D graphics2D;
 
     @PostConstruct
@@ -69,7 +68,7 @@ public class DrawServiceImpl extends JPanel {
             }
         }
         player.draw(graphics2D);
-        userMenu.draw(graphics2D, player, null); //TODO fix Thread
+        userMenu.draw(graphics2D, player);
         if (keyHandler.paused) {
             userMenu.drawPauseScreen();
             soundService.stopMusic();

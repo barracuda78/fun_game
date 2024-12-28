@@ -19,9 +19,12 @@ import javax.imageio.ImageIO;
 
 public class Entity {
 
-    private final DrawEntityDirectionHandlerRegistry drawEntityDirectionHandlerRegistry;
+    protected final DrawEntityDirectionHandlerRegistry drawEntityDirectionHandlerRegistry;
+
     final CollisionChecker collisionChecker;
-    private final Point coordinates;
+
+    protected final Point coordinates;
+
     public int speed;
 
     protected final Sprites sprites;
