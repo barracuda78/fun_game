@@ -19,21 +19,29 @@ import org.springframework.stereotype.Service;
 public class ItemPlacerServiceImpl {
 
     private final KeyItem keyItem_1;
-
     private final KeyItem keyItem_2;
+    private final KeyItem keyItem_3;
 
     private final CoinItem coinItem;
 
     private final DoorItem doorItem_1;
     private final DoorItem doorItem_2;
+    private final DoorItem doorItem_3;
+    private final DoorItem doorItem_4;
+    private final DoorItem doorItem_5;
+
     private final ChestItem chestItem;
+
     private final FishItem fishItem;
     private final FishItem fishItem_1;
     private final FishItem fishItem_2;
+
     private final BootsItem bootsItem_1;
     private final BootsItem bootsItem_2;
+
     private final SausageItem sausageItem;
     private final SausageItem sausageItem_1;
+
     private final SausageItem coinItem_1;
     private final SausageItem coinItem_2;
 
@@ -60,9 +68,13 @@ public class ItemPlacerServiceImpl {
 //        items[4].worldX = 40 * TILE_SIZE;
 //        items[4].worldY = 7 * TILE_SIZE;
 
+//        items[4] = chestItem;
+//        items[4].worldX = 5 * TILE_SIZE;
+//        items[4].worldY = 2 * TILE_SIZE;
+
         items[4] = chestItem;
-        items[4].worldX = 5 * TILE_SIZE;
-        items[4].worldY = 2 * TILE_SIZE;
+        items[4].worldX = 22 * TILE_SIZE;
+        items[4].worldY = 27 * TILE_SIZE;
 
 
         items[5] = fishItem;
@@ -70,8 +82,8 @@ public class ItemPlacerServiceImpl {
         items[5].worldY = 9 * TILE_SIZE;
 
         items[6] = coinItem;
-        items[6].worldX = 22 * TILE_SIZE;
-        items[6].worldY = 27 * TILE_SIZE;
+        items[6].worldX = 5 * TILE_SIZE;
+        items[6].worldY = 2 * TILE_SIZE;
 
         items[7] = bootsItem_1;
         items[7].worldX = 10 * TILE_SIZE;
@@ -104,6 +116,22 @@ public class ItemPlacerServiceImpl {
         items[14] = coinItem_2;
         items[14].worldX = 42 * TILE_SIZE;
         items[14].worldY = 10 * TILE_SIZE;
+
+        items[15] = doorItem_3;
+        items[15].worldX = 22 * TILE_SIZE;
+        items[15].worldY = 29 * TILE_SIZE;
+
+        items[16] = doorItem_4;
+        items[16].worldX = 22 * TILE_SIZE;
+        items[16].worldY = 30 * TILE_SIZE;
+
+        items[17] = doorItem_5;
+        items[17].worldX = 22 * TILE_SIZE;
+        items[17].worldY = 31 * TILE_SIZE;
+
+        items[18] = keyItem_3;
+        items[18].worldX = 7 * TILE_SIZE;
+        items[18].worldY = 46 * TILE_SIZE;
     }
 
     public Item[] getItems() {

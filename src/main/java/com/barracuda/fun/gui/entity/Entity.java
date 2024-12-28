@@ -6,7 +6,6 @@ import static com.barracuda.fun.gui.constants.ScreenSettings.TILE_SIZE;
 
 import com.barracuda.fun.gui.CollisionChecker;
 import com.barracuda.fun.gui.ImageScalerServiceImpl;
-import com.barracuda.fun.gui.PlayerCoordinatesService;
 import com.barracuda.fun.gui.entity.draw_handler.DrawEntityDirectionHandler;
 import com.barracuda.fun.gui.entity.draw_handler.DrawEntityDirectionHandlerRegistry;
 import com.barracuda.fun.gui.item.Item;
@@ -16,7 +15,9 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class Entity {
 
     protected final DrawEntityDirectionHandlerRegistry drawEntityDirectionHandlerRegistry;
@@ -123,6 +124,7 @@ public class Entity {
             scaledImage = tool.scaleImage(scaledImage, TILE_SIZE, TILE_SIZE);
         }
         catch (IOException e) {
+            log.error("File cannot be reed: " + imagePath);
             e.printStackTrace();
         }
         return scaledImage;

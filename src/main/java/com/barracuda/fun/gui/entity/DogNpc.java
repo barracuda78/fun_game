@@ -40,12 +40,13 @@ public class DogNpc extends Entity {
     @PostConstruct
     public void init() {
         direction = "down";
-        speed = 1;
+        speed = 4;
         loadDogNPCImage();
     }
 
     @Override
     public void draw(Graphics2D graphics2D, Point playerCoordinates) {
+        //TODO: [PERFORMANCE OPT] add checks not to draw npc always, only when it is on the screen. See how it is implemented in Entity class.
         int screenX = coordinates.x - playerCoordinates.x + SCREEN_CENTER_X;
         int screenY = coordinates.y - playerCoordinates.y + SCREEN_CENTER_Y;
         final DrawEntityDirectionHandler handler = drawEntityDirectionHandlerRegistry.getHandler(direction);
@@ -58,18 +59,18 @@ public class DogNpc extends Entity {
         BufferedImage up_2 = loadScaledImage("/graphics/npc/dog_up_02.png");
         BufferedImage down_1 = loadScaledImage("/graphics/npc/dog_down_01.png");
         BufferedImage down_2 = loadScaledImage("/graphics/npc/dog_down_02.png");
-        BufferedImage left_1 = loadScaledImage("/graphics/npc/dog_up_01.png");
-        BufferedImage left_2 = loadScaledImage("/graphics/npc/dog_up_02.png");
-        BufferedImage right_1 = loadScaledImage("/graphics/npc/dog_down_01.png");
-        BufferedImage right_2 = loadScaledImage("/graphics/npc/dog_down_02.png");
+        BufferedImage left_1 = loadScaledImage("/graphics/npc/dog_left_01.png");
+        BufferedImage left_2 = loadScaledImage("/graphics/npc/dog_left_02.png");
+        BufferedImage right_1 = loadScaledImage("/graphics/npc/dog_right_01.png");
+        BufferedImage right_2 = loadScaledImage("/graphics/npc/dog_right_02.png");
         sprites.addSprite(up_1, MovementDirection.UP, 1); //TODO do not duplicate code in DogNpc and Player class!
         sprites.addSprite(up_2, MovementDirection.UP, 2);
-        sprites.addSprite(down_1, MovementDirection.UP, 1);
-        sprites.addSprite(down_2, MovementDirection.UP, 2);
-        sprites.addSprite(left_1, MovementDirection.UP, 1);
-        sprites.addSprite(left_2, MovementDirection.UP, 2);
-        sprites.addSprite(right_1, MovementDirection.UP, 1);
-        sprites.addSprite(right_2, MovementDirection.UP, 2);
+        sprites.addSprite(down_1, MovementDirection.DOWN, 1);
+        sprites.addSprite(down_2, MovementDirection.DOWN, 2);
+        sprites.addSprite(left_1, MovementDirection.LEFT, 1);
+        sprites.addSprite(left_2, MovementDirection.LEFT, 2);
+        sprites.addSprite(right_1, MovementDirection.RIGHT, 1);
+        sprites.addSprite(right_2, MovementDirection.RIGHT, 2);
     }
 
     //AI method of characters behavior:
